@@ -15,9 +15,9 @@ class cog_query(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)  # This command can only be user once every 3 seconds
     async def query(self, ctx: ApplicationContext):
         await ctx.defer()
-        message = await ctx.channel.send(content='Please wait while I process your query..')
+        message = await ctx.channel.send(content='Please wait while I process your query...')
         query = ctx.message
-        response: Program = self.bot.query_client.run(query=query)
+        response: Program = await self.bot.query_client.run(query=query)
         # response = response.get('answer')
         await message.delete()
         await ctx.respond(response)

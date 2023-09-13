@@ -13,7 +13,7 @@ class QueryAgent(BaseAgent):
     def agent_type(self):
         return "chat"
 
-    def run(self, **kwargs) -> Union[str, Dict[str, Any]]:
+    async def run(self, **kwargs) -> Union[str, Dict[str, Any]]:
         """Run the agent to generate a response to the user query."""
 
         # _knowledge_variable = self.get_knowledge_variable
@@ -26,7 +26,7 @@ class QueryAgent(BaseAgent):
         #     else:
         #         raise ValueError("knowledge_variable not found in input kwargs")
         # else:
-        output = self.compiler(**kwargs)
+        output = await self.compiler(**kwargs)
         return output
 
         if self.return_complete:
