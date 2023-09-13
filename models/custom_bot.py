@@ -4,12 +4,15 @@ import traceback
 import sys
 from dotagent import compiler
 from dotagent.memory import SummaryMemory
+from pathlib import Path
+from agents import QueryAgent
 
 
 class DiscordBot(commands.Bot):
     def __init__(self, openai_key, *args, **kwargs):
         query_llm = compiler.llms.OpenAI(model="gpt-3.5-turbo-16k", api_key=openai_key)
-        self.query_client = initialize_dotagent_client(llm=query_llm, file_name='query', memory=SummaryMemory())
+        self.query_client = QueryAgent(llm=query_llm, filename='query', memory=SummaryMemory())
+        # self.interview_client = initialize_dotagent_client(llm=query_llm, file_name='interview', memory=SummaryMemory())
         super().__init__(*args, **kwargs)
 
     async def on_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
@@ -20,15 +23,4 @@ class DiscordBot(commands.Bot):
         print(exc, file=sys.stderr)
 
 
-def initialize_dotagent_client(llm, file_name, memory):
-    template = get_template(file_name)
-    client = compiler(template=template, llm=llm, stream=False, memory=memory)
-    return client
 
-
-def get_template(file_name):
-    try:
-        with open(file_name) as f:
-            return f.read()
-    except FileNotFoundError:
-        raise FileNotFoundError('NOTE : Store your templates in ./templates as .hbs files.')
