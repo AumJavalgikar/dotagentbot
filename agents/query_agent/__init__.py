@@ -26,7 +26,7 @@ class QueryAgent(BaseAgent):
         #     else:
         #         raise ValueError("knowledge_variable not found in input kwargs")
         # else:
-        output = self.compiler(**kwargs, silent=True)
+        output = self.compiler(**kwargs)
         return output
 
         if self.return_complete:
