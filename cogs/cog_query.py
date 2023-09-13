@@ -18,7 +18,7 @@ class cog_query(commands.Cog):
         message = await ctx.channel.send(content='Please wait while I process your query..')
         query = ctx.message
         response: Program = self.bot.query_client.run(query=query)
-        response = response.get('answer')
+        # response = response.get('answer')
         await message.delete()
         await ctx.respond(response)
 
