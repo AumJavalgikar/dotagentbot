@@ -16,17 +16,18 @@ class QueryAgent(BaseAgent):
     def run(self, **kwargs) -> Union[str, Dict[str, Any]]:
         """Run the agent to generate a response to the user query."""
 
-        _knowledge_variable = self.get_knowledge_variable
-
-        if _knowledge_variable:
-            if kwargs.get(_knowledge_variable):
-                query = kwargs.get(_knowledge_variable)
-                retrieved_knowledge = self.get_knowledge(query)
-                output = self.compiler(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
-            else:
-                raise ValueError("knowledge_variable not found in input kwargs")
-        else:
-            output = self.compiler(**kwargs, silent=True)
+        # _knowledge_variable = self.get_knowledge_variable
+        #
+        # if _knowledge_variable:
+        #     if kwargs.get(_knowledge_variable):
+        #         query = kwargs.get(_knowledge_variable)
+        #         retrieved_knowledge = self.get_knowledge(query)
+        #         output = self.compiler(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
+        #     else:
+        #         raise ValueError("knowledge_variable not found in input kwargs")
+        # else:
+        output = self.compiler(**kwargs, silent=True)
+        return output
 
         if self.return_complete:
             return output
