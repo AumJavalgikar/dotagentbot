@@ -22,7 +22,7 @@ class cog_interview(commands.Cog):
                 ], description='What role will the Bot play?')):
         await ctx.defer()
         if type == 'interviewer':
-            response = await self.bot.interviewer_client.run(f'Hello, my name is {ctx.user.name}, '
+            response = await self.bot.interviewer_client.run(query=f'Hello, my name is {ctx.user.name}, '
                                                              f'I would like to apply for Python Intern role.')
             message = await ctx.respond(response)
             thread = await ctx.channel.create_thread(name=f'{ctx.user.name}\'s interviewer agent thread',
@@ -30,7 +30,7 @@ class cog_interview(commands.Cog):
             self.bot.interviewer_threads.append(thread.id)
             return
         if type == 'interviewee':
-            response = await self.bot.interviewer_client.run(f'Hello, Introduce yourself please.')
+            response = await self.bot.interviewer_client.run(query=f'Hello, Introduce yourself please.')
             message = await ctx.respond(response)
             thread = await ctx.channel.create_thread(name=f'{ctx.user.name}\'s interviewee agent thread',
                                                      message=message)
@@ -41,10 +41,10 @@ class cog_interview(commands.Cog):
     async def on_message(self, message: Message):
         if isinstance(message.channel, Thread):
             if message.channel.id in self.bot.interviewer_threads:
-                response = self.bot.interviewer_client.run(message.content)
+                response = self.bot.interviewer_client.run(query=message.content)
                 await message.channel.send(content=response)
             elif message.channel.id in self.bot.interviewee_threads:
-                response = self.bot.interviewee_client.run(message.content)
+                response = self.bot.interviewee_client.run(query=message.content)
                 await message.channel.send(content=response)
 
 
