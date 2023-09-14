@@ -30,7 +30,7 @@ class cog_interview(commands.Cog):
             self.bot.interviewer_threads.append(thread.id)
             return
         if type == 'interviewee':
-            response = await self.bot.interviewer_client.run(query=f'Hello, Introduce yourself please.')
+            response = await self.bot.interviewee_client.run(query=f'Hello, Introduce yourself please.')
             message = await ctx.respond(response)
             thread = await ctx.channel.create_thread(name=f'{ctx.user.name}\'s interviewee agent thread',
                                                      message=message)
@@ -39,12 +39,20 @@ class cog_interview(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
+        if message.author.bot:
+            return
         if isinstance(message.channel, Thread):
+            print(message)
+            print('content=', message.content)
+            print(message.type)
+            print(message.system_content)
             if message.channel.id in self.bot.interviewer_threads:
-                response = self.bot.interviewer_client.run(query=message.content)
+                async with message.channel.typing():
+                    response = await self.bot.interviewer_client.run(query=message.content)
                 await message.channel.send(content=response)
             elif message.channel.id in self.bot.interviewee_threads:
-                response = self.bot.interviewee_client.run(query=message.content)
+                async with message.channel.typing():
+                    response = await self.bot.interviewee_client.run(query=message.content)
                 await message.channel.send(content=response)
 
 

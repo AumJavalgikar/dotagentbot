@@ -12,10 +12,13 @@ They are looking for candidates with experience with the following :
 {{#user~}}
 The interviewee has responded with the following:
 {{query}}
-Respond to the interviewee with appropriate response as a recruiter,
- when sufficient information is gathered, let the interviewee know that they will be emailed with
+Respond to the interviewee with an appropriate follow up question as a recruiter,
+ when sufficient information is gathered in summary memory, let the interviewee know that they will be emailed with
 further details and stop.
+Now generate the next followup question.
 {{~/user}}
+
+
 
 {{#assistant~}}
 {{gen 'followup' temperature=0 max_tokens=500}}

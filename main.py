@@ -10,10 +10,10 @@ load_dotenv('secrets/secrets.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
 dev_id = os.getenv('DEV_ID')
 guild_ids = map(int, os.getenv('GUILD_IDS').split(','))
-openai_key = os.getenv('OPENAI_KEY')
-intents = discord.Intents.default()
+openai_key = os.getenv('OPENAI_API_KEY')
+intents = discord.Intents.all()
 
-bot = DiscordBot(openai_key)
+bot = DiscordBot(openai_key, intents=intents)
 
 
 def check_if_it_is_me(ctx):
