@@ -10,6 +10,6 @@ def initialize_dotagent_client(llm, file_name, memory):
 
 def _get_template(file_name):
     try:
-        return Path(f'./templates/{file_name}.hbs').read_text()
+        return Path(f'./agents/templates/{file_name}.hbs').read_text()
     except FileNotFoundError:
         raise FileNotFoundError('NOTE : Store your templates in ./templates as .hbs files.')

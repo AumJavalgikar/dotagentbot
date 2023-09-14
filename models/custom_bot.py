@@ -5,13 +5,17 @@ import sys
 from dotagent import compiler
 from dotagent.memory import SummaryMemory
 from pathlib import Path
-from agents import QueryAgent
+from agents import QueryAgent, IntervieweeAgent, InterviewerAgent
 
 
 class DiscordBot(commands.Bot):
     def __init__(self, openai_key, *args, **kwargs):
-        query_llm = compiler.llms.OpenAI(model="gpt-3.5-turbo-16k", api_key=openai_key)
-        self.query_client = QueryAgent(llm=query_llm, filename='query', memory=SummaryMemory())
+        open_ai_llm = compiler.llms.OpenAI(model="gpt-3.5-turbo-16k", api_key=openai_key)
+        self.query_client = QueryAgent(llm=open_ai_llm, memory=SummaryMemory())
+        self.interviewer_client = InterviewerAgent(llm=open_ai_llm, memory=SummaryMemory())
+        self.interviewee_client = IntervieweeAgent(llm=open_ai_llm, memory=SummaryMemory())
+        self.interviewer_threads = []
+        self.interviewee_threads = []
         # self.interview_client = initialize_dotagent_client(llm=query_llm, file_name='interview', memory=SummaryMemory())
         super().__init__(*args, **kwargs)
 
