@@ -9,25 +9,25 @@ class QueryAgent(BaseAgent):
     def __init__(self, filename, llm, memory, **kwargs):
         super().__init__(**kwargs)
         self.compiler = initialize_dotagent_client(llm=llm, file_name=filename, memory=memory)
+        self.output_key = 'answer'
 
     def agent_type(self):
         return "chat"
 
-    def run(self, **kwargs) -> Union[str, Dict[str, Any]]:
+    async def run(self, **kwargs) -> Union[str, Dict[str, Any]]:
         """Run the agent to generate a response to the user query."""
 
-        # _knowledge_variable = self.get_knowledge_variable
-        #
-        # if _knowledge_variable:
-        #     if kwargs.get(_knowledge_variable):
-        #         query = kwargs.get(_knowledge_variable)
-        #         retrieved_knowledge = self.get_knowledge(query)
-        #         output = self.compiler(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
-        #     else:
-        #         raise ValueError("knowledge_variable not found in input kwargs")
-        # else:
-        output = self.compiler(**kwargs)
-        return output
+        _knowledge_variable = self.get_knowledge_variable
+
+        if _knowledge_variable:
+            if kwargs.get(_knowledge_variable):
+                query = kwargs.get(_knowledge_variable)
+                retrieved_knowledge = self.get_knowledge(query)
+                output = self.compiler(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
+            else:
+                raise ValueError("knowledge_variable not found in input kwargs")
+        else:
+            output = await self.compiler(**kwargs)
 
         if self.return_complete:
             return output

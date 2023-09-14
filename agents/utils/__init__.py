@@ -4,7 +4,7 @@ from pathlib import Path
 
 def initialize_dotagent_client(llm, file_name, memory):
     template = _get_template(file_name)
-    client = compiler(template=template, llm=llm, memory=memory, async_mode=True)
+    client = compiler(template=template, llm=llm, memory=memory, async_mode=False)
     return client
 
 
