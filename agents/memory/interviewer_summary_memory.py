@@ -21,7 +21,6 @@ class InterviewerMemory(BaseMemory, BaseModel):
     current_summary: str = ""
     messages_in_summary: List[Dict[BaseMessage, Any]] = []
     max_questions: int = Field()
-    discord_id: int = Field()
     interview_goals: list = Field()
 
     def add_memory(self, prompt: str, llm_response: Any) -> None:

@@ -16,20 +16,22 @@ class cog_interview(commands.Cog):
 
     @slash_command(name='interview', description='desc')
     # @commands.cooldown(1, 3, commands.BucketType.user)  # This command can only be user once every 3 seconds
-    async def interview(self, ctx: ApplicationContext, type:Option(
-                str,
-                choices=[
-                    OptionChoice(name="Interviewer", value='interviewer'),
-                    OptionChoice(name="Interviewee", value='interviewee')
-                ], description='What role will the Bot play?')):
+    async def interview(self, ctx: ApplicationContext, type: Option(
+        str,
+        choices=[
+            OptionChoice(name="Interviewer", value='interviewer'),
+            OptionChoice(name="Interviewee", value='interviewee')
+        ], description='What role will the Bot play?')):
         await ctx.defer()
         if type == 'interviewer':
-            interviewer_client = self.bot.interviewer_clients.setdefault(ctx.channel.id, InterviewerAgent(llm=self.bot.open_ai_llm, memory=InterviewerMemory()))
+            interviewer_client = self.bot.interviewer_clients.setdefault(
+                ctx.channel.id,
+                InterviewerMemory(max_questions=2, interview_goals=['Python', 'Github', 'OpenAI API']))
             response = await interviewer_client.run(query=f'Hello, my name is {ctx.user.name}, '
-                                                             f'I would like to apply for Python Intern role.')
+                                                          f'I would like to apply for Python Intern role.')
             message = await ctx.respond(response)
             thread = await ctx.channel.create_thread(name=f'{ctx.user.name}\'s interviewer agent thread',
-                                            message=message)
+                                                     message=message)
             self.bot.interviewer_threads.append(thread.id)
             return
         if type == 'interviewee':
@@ -52,7 +54,8 @@ class cog_interview(commands.Cog):
             if message.channel.id in self.bot.interviewer_threads:
                 async with message.channel.typing():
                     interviewer_client = self.bot.interviewer_clients.setdefault(message.channel.id, InterviewerAgent(
-                        llm=self.bot.open_ai_llm, memory=InterviewerMemory()))
+                        llm=self.bot.open_ai_llm,
+                        memory=InterviewerMemory(max_questions=2, interview_goals=['Python', 'Github', 'OpenAI API'])))
 
                     response = await interviewer_client.run(query=message.content)
                 await message.channel.send(content=response)
@@ -60,7 +63,6 @@ class cog_interview(commands.Cog):
                 async with message.channel.typing():
                     response = await self.bot.interviewee_client.run(query=message.content)
                 await message.channel.send(content=response)
-
 
 
 def setup(client):
