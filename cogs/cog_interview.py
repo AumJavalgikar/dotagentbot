@@ -6,6 +6,8 @@ from discord import Option, Message, TextChannel, Thread
 from discord import OptionChoice
 from models.custom_bot import DiscordBot
 from discord.ext import commands
+from agents.memory import InterviewerMemory
+from agents import InterviewerAgent
 
 
 class cog_interview(commands.Cog):
@@ -22,7 +24,8 @@ class cog_interview(commands.Cog):
                 ], description='What role will the Bot play?')):
         await ctx.defer()
         if type == 'interviewer':
-            response = await self.bot.interviewer_client.run(query=f'Hello, my name is {ctx.user.name}, '
+            interviewer_client = self.bot.interviewer_clients.setdefault(ctx.channel.id, InterviewerAgent(llm=self.bot.open_ai_llm, memory=InterviewerMemory()))
+            response = await interviewer_client.run(query=f'Hello, my name is {ctx.user.name}, '
                                                              f'I would like to apply for Python Intern role.')
             message = await ctx.respond(response)
             thread = await ctx.channel.create_thread(name=f'{ctx.user.name}\'s interviewer agent thread',
@@ -48,7 +51,10 @@ class cog_interview(commands.Cog):
             print(message.system_content)
             if message.channel.id in self.bot.interviewer_threads:
                 async with message.channel.typing():
-                    response = await self.bot.interviewer_client.run(query=message.content)
+                    interviewer_client = self.bot.interviewer_clients.setdefault(message.channel.id, InterviewerAgent(
+                        llm=self.bot.open_ai_llm, memory=InterviewerMemory()))
+
+                    response = await interviewer_client.run(query=message.content)
                 await message.channel.send(content=response)
             elif message.channel.id in self.bot.interviewee_threads:
                 async with message.channel.typing():
