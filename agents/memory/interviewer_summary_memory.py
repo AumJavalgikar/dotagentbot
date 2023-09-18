@@ -47,7 +47,7 @@ class InterviewerMemory(BaseMemory, BaseModel):
 
             summarizer = compiler(template=INTERVIEWER_SUMMARIZER_TEMPLATE, llm=llm, stream=False,
                                   max_questions=self.max_questions, interview_goals=self.interview_goals, async_mode=True)
-            summarized_memory = await summarizer(summary=self.current_summary, new_lines=messages_to_text)
+            summarized_memory = summarizer(summary=self.current_summary, new_lines=messages_to_text)
             print(f'current summary : {summarizer.get("result")}')
             self.current_summary = extract_text(summarized_memory.text)
             summarized_memory = "Current conversation:\n" + self.current_summary
