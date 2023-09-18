@@ -31,7 +31,7 @@ class InterviewerAgent(BaseAgent):
 
         if self.return_complete:
             return output
-
+        print(f'Output of entire query : {output}')
         _output_key = self.output_key if self.output_key is not None else self.get_output_key(output)
 
         if output.variables().get(_output_key):
