@@ -2,9 +2,9 @@ from dotagent import compiler
 from pathlib import Path
 
 
-def initialize_dotagent_client(llm, file_name, memory):
+def initialize_dotagent_client(llm, file_name, memory, **kwargs):
     template = _get_template(file_name)
-    client = compiler(template=template, llm=llm, memory=memory, async_mode=False)
+    client = compiler(template=template, llm=llm, memory=memory, **kwargs)
     return client
 
 

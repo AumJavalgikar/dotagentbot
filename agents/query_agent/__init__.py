@@ -8,7 +8,7 @@ class QueryAgent(BaseAgent):
 
     def __init__(self, llm, memory, **kwargs):
         super().__init__(**kwargs)
-        self.compiler = initialize_dotagent_client(llm=llm, file_name='query', memory=memory)
+        self.compiler = initialize_dotagent_client(llm=llm, file_name='query', memory=memory, async_mode=True)
         self.output_key = 'answer'
 
     def agent_type(self):

@@ -57,7 +57,7 @@ class cog_interview(commands.Cog):
                     interviewer_client = self.bot.interviewer_clients.setdefault(
                 message.channel.id,InterviewerAgent(llm=self.bot.open_ai_llm,
                 memory=InterviewerMemory(max_questions=2, interview_goals=['Python', 'Github', 'OpenAI API']))
-            )
+                    )
 
                     response = await interviewer_client.run(query=message.content)
                 await message.channel.send(content=response)

@@ -8,7 +8,7 @@ class IntervieweeAgent(BaseAgent):
 
     def __init__(self, llm, memory, **kwargs):
         super().__init__(**kwargs)
-        self.compiler = initialize_dotagent_client(llm=llm, file_name='interviewee', memory=memory)
+        self.compiler = initialize_dotagent_client(llm=llm, file_name='interviewee', memory=memory, async_mode=True)
         self.output_key = 'followup'
 
     def agent_type(self):
