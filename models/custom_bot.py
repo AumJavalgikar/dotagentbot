@@ -13,7 +13,7 @@ class DiscordBot(commands.Bot):
         self.open_ai_llm = compiler.llms.OpenAI(model="gpt-3.5-turbo-16k", api_key=openai_key)
         self.query_client = QueryAgent(llm=self.open_ai_llm, memory=SummaryMemory())
         self.interviewer_clients: Dict[int, InterviewerAgent] = {}
-        self.interviewee_client = InterviewerAgent(llm=self.open_ai_llm, memory=SummaryMemory())
+        self.interviewee_client = IntervieweeAgent(llm=self.open_ai_llm, memory=SummaryMemory())
         self.interviewer_threads = []
         self.interviewee_threads = []
         # self.interview_client = initialize_dotagent_client(llm=query_llm, file_name='interview', memory=SummaryMemory())

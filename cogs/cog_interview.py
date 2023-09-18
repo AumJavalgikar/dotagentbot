@@ -55,7 +55,7 @@ class cog_interview(commands.Cog):
             if message.channel.id in self.bot.interviewer_threads:
                 async with message.channel.typing():
                     interviewer_client = self.bot.interviewer_clients.setdefault(
-                message.channel.id,InterviewerAgent(llm=self.bot.open_ai_llm,
+                message.channel.id, InterviewerAgent(llm=self.bot.open_ai_llm,
                 memory=InterviewerMemory(max_questions=2, interview_goals=['Python', 'Github', 'OpenAI API']))
                     )
 
