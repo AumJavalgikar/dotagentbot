@@ -15,7 +15,7 @@ New summary:
 {{~/user}}
 
 {{#assistant~}}
-The interviewee introduced themselves as Jack, Python has been discussed, no need for further questions related to Python. 
+The interviewee introduced themselves as Jack, they shared their experience working with Python in a udemy course. The interviewer then asks the interviewee about what they learned in the course. They shared further details about their Python course, they learned OOP in Python, the requests module, and webscraping using BS4. The interviewer then asks interviewee for further details about the requests module. 
 Last response by interviewer: Can you share more details about your experience with the requests module?
 Interview goals: {Python : {current_state: discussed, key_points:[udemy, requests, bs4, webscraping], questions_asked:4}, Git and Github : [current_state:discussing, key_points:[], questions_asked:0],  OpenAI API : [current_state:not discussed, key_points:[], questions_asked:0]}
 {{~/assistant}}
@@ -39,9 +39,7 @@ Ok, I will do that. Let's do a practice round
 {{#user~}}
 That was great. Lets do another one. Do not use information from the example. 
 The points to cover in the interview are: {{interview_goals}}
-If noquestions_asked >= max_questions, set current_state as "discussed".
-If a state for a point is marked as "discussed" remove all information related to that point from current summary 
-and replace it with "(point name) has been discussed, no need for further questions".
+if noquestions_asked >= max_questions, set current_state as "discussed".
 
 max_questions: {{max_questions}}
 Current summary:
