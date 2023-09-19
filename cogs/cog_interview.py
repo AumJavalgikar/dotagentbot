@@ -57,7 +57,7 @@ class cog_interview(commands.Cog):
                     interviewer_client = self.bot.interviewer_clients.get(
                 message.channel.id)
                     response = await interviewer_client.run(query=message.content)
-                await message.channel.send(content=f'{response}\nCurrent history : {interviewer_client.memory.current_summary}')
+                await message.channel.send(content=f'{response}\nCurrent history : {interviewer_client.compiler.memory.current_summary}')
             elif message.channel.id in self.bot.interviewee_threads:
                 async with message.channel.typing():
                     response = await self.bot.interviewee_client.run(query=message.content)
