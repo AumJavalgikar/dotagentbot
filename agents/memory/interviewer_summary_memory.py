@@ -33,7 +33,6 @@ class InterviewerMemory(BaseMemory, BaseModel):
 
     def get_memory(self, **kwargs) -> str:
         """Retrieve entire memory from the store."""
-
         # Create llm instance
         llm = compiler.llms.OpenAI(model="gpt-3.5-turbo")
 
@@ -48,7 +47,6 @@ class InterviewerMemory(BaseMemory, BaseModel):
             summarizer = compiler(template=INTERVIEWER_SUMMARIZER_TEMPLATE, llm=llm, stream=False,
                                   max_questions=self.max_questions, interview_goals=self.interview_goals)
             summarized_memory = summarizer(summary=self.current_summary, new_lines=messages_to_text)
-            print(f'current summary : {summarizer.get("result")}')
             self.current_summary = extract_text(summarized_memory.text)
             summarized_memory = "Current conversation:\n" + self.current_summary
 
