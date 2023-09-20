@@ -31,16 +31,16 @@ class DnDView(View):
     async def update_message(self, interaction: discord.Interaction):
         await interaction.edit_original_response(embed=self.embed, view=self)
 
-    def update_embed(self, new_description):
+    def update_embed(self, new_description, themes=None):
         self.description = new_description
         self.accept_button.disabled = False
         self.new_button.disabled = False
         print(f'NEW DESCRIPTION : {new_description}')
-        self.construct_embed(new_description)
+        self.construct_embed(new_description, themes)
 
-    def construct_embed(self, new_description):
+    def construct_embed(self, new_description, themes=None):
         self.embed = Embed(title='Prompt for DND master', colour=discord.Colour.green(),
-                           description=new_description)
+                           description=f'{new_description}'+(f'\n\nThemes: {themes}' if themes is not None else ''))
 
 
 class PromptModal(discord.ui.Modal):
