@@ -19,7 +19,7 @@ class DnDView(View):
         self.new_button.disabled = True
         self.new_button.callback = self.new_button_callback
         self.modal = PromptModal(view=self)
-        super().__init__(self.accept_button, self.new_button, self.modal)
+        super().__init__(self.accept_button, self.new_button)
 
     async def accept_button_callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
