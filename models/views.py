@@ -51,6 +51,8 @@ class PromptModal(discord.ui.Modal):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
+        self.view.update_embed('Generating scene..')
+        await self.view.update_message(interaction)
         new_description = await self.view.dnd_utility_agent.run(themes=self.children[0].value)
         self.view.update_embed(new_description)
         await self.view.update_message(interaction)
