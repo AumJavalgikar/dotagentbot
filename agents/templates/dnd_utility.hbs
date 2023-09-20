@@ -1,0 +1,13 @@
+{{#system~}}
+You are helpful AI assistant
+{{~/system}}
+{{#user~}}
+Create a  prompt for a dungeons and dragons AI agent, make the prompt creative and up to one paragraph.
+There is only one player, do not create a description for the player, this will be done later. For now, focus on the environment and the story.
+Theme: {{themes}}
+
+Start the prompt with, "You are a dungeon master..
+{{~/user}}
+{{#assistant~}}
+{{gen 'followup' temperature=0 max_tokens=500}}
+{{~/assistant}}

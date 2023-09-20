@@ -1,0 +1,9 @@
+{{#system~}}
+{{dungeon_master_info}}
+{{~/system}}
+{{#user~}}
+    Generate the next event in the dungeons and dragons game.
+{{~/user}}
+{{#assistant~}}
+{{gen 'followup' temperature=0 max_tokens=500}}
+{{~/assistant}}
