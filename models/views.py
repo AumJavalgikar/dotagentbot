@@ -36,7 +36,7 @@ class DnDView(View):
         self.accept_button.disabled = False
         self.new_button.disabled = False
         print(f'NEW DESCRIPTION : {new_description}')
-        self.embed = self.construct_embed(new_description)
+        self.construct_embed(new_description)
 
     def construct_embed(self, new_description):
         self.embed = Embed(title='Prompt for DND master', colour=discord.Colour.green(),
