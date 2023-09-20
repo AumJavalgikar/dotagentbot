@@ -7,7 +7,8 @@ from agents import DnDUtilityAgent
 
 
 class DnDView(View):
-    def __init__(self, description):
+    def __init__(self, description, interaction):
+        self.interaction = interaction
         self.description = description
         self.embed = Embed(title='Prompt for DND master', colour=discord.Colour.green(),
                            description=self.description)
@@ -33,7 +34,7 @@ class DnDView(View):
         await self.update_message(interaction)
 
     async def update_message(self, interaction: discord.Interaction):
-        await interaction.edit_original_response(embed=self.embed, view=self)
+        await self.interaction.edit_original_response(embed=self.embed, view=self)
 
     def update_embed(self, new_description):
         self.description = new_description
