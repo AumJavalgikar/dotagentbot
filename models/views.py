@@ -16,7 +16,6 @@ class DnDView(View):
         self.accept_button.callback = self.accept_button_callback
         self.accept_button.disabled = True
         self.new_button = Button(label='New', style=discord.ButtonStyle.gray, emoji='🔁')
-        self.new_button.disabled = True
         self.new_button.callback = self.new_button_callback
         self.modal = PromptModal(view=self)
         super().__init__(self.accept_button, self.new_button)
