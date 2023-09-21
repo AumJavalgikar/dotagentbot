@@ -12,7 +12,7 @@ class DnDUtilityAgent(BaseAgent):
         if llm is None:
             llm = compiler.llms.OpenAI(model='gpt-3.5-turbo-16k')
         self.compiler = initialize_dotagent_client(llm=llm, file_name='dnd_utility', memory=memory, async_mode=True)
-
+        self.return_complete = True
     def agent_type(self):
         return "chat"
 
@@ -33,7 +33,6 @@ class DnDUtilityAgent(BaseAgent):
 
         if self.return_complete:
             return output
-        print(f'output: {output}')
         _output_key = self.output_key if self.output_key is not None else self.get_output_key(output)
 
         if output.variables().get(_output_key):
