@@ -28,7 +28,7 @@ class DnDUtilityView(View):
         message = await interaction.original_response()
         await message.delete()
         channel: TextChannel = interaction.channel
-        thread = await channel.create_thread(name=self.title)
+        thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
         await thread.add_user(interaction.user)
         dnd_agent = DnDAgent(system_prompt=self.description, memory=SummaryMemory())
         self.bot.dnd_threads.append(thread.id)
