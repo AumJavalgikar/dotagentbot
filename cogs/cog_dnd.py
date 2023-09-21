@@ -14,7 +14,7 @@ class cog_dnd(commands.Cog):
     @slash_command(name='dnd', description='Play dungeons and dragons')
     # @commands.cooldown(1, 3, commands.BucketType.user)  # This command can only be user once every 3 seconds
     async def command_name(self, ctx: ApplicationContext):
-        view = DnDUtilityView(description='Please enter the theme to generate a prompt for DnD master!', bot=bot)
+        view = DnDUtilityView(description='Please enter the theme to generate a prompt for DnD master!', bot=self.bot)
         await ctx.respond(embed=view.embed, view=view)
 
 
