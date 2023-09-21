@@ -2,11 +2,12 @@
     {{dungeon_master_info}}
 {{~/system}}
 {{#user~}}
-    Generate the next event in the dungeons and dragons game based on the player's choice,
+    Generate the next event in the game based on the player's choice,
     Player chooses:
     {{player_choice}}
+    You may generate a random event.
     Keep the answer up to 1 paragraph long.
 {{~/user}}
 {{#assistant~}}
-{{gen 'followup' temperature=0 max_tokens=500}}
+{{gen 'followup' temperature=20 max_tokens=500}}
 {{~/assistant}}
