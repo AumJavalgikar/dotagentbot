@@ -42,11 +42,15 @@ class DnDUtilityView(View):
     async def update_message(self, interaction: discord.Interaction):
         await interaction.edit_original_response(embed=self.embed, view=self)
 
-    def update_embed(self, new_description, themes=None, title=None):
+    def update_embed(self, new_description, themes=None, title=None, disable_buttons=False):
         self.description = new_description
         self.title = title
-        self.accept_button.disabled = False
-        self.new_button.disabled = False
+        if not disable_buttons:
+            self.accept_button.disabled = False
+            self.new_button.disabled = False
+        else:
+            self.accept_button.disabled = True
+            self.new_button.disabled = True
         print(f'NEW DESCRIPTION : {new_description}')
         self.construct_embed(new_description, themes)
 
@@ -63,7 +67,7 @@ class PromptModal(discord.ui.Modal):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
-        self.view.update_embed('Generating scene..')
+        self.view.update_embed('Generating scene..', disable_buttons=True)
         await self.view.update_message(interaction)
         output = await self.view.dnd_utility_agent.run(themes=self.children[0].value)
         new_description = output.get('followup')
@@ -87,7 +91,8 @@ class ActionModal(discord.ui.Modal):
         thread: Thread = interaction.channel
         await thread.send(embed=action_embed)
 
-        scene_view = DnDView(followup='Generating next scene..', title=self.view.title, dnd_agent=self.view.dndagent)
+        scene_view = DnDView(followup='Generating next scene..', title=self.view.title,
+                             dnd_agent=self.view.dndagent, disable_buttons=True)
         message: discord.Message = await thread.send(embed=scene_view.embed, view=scene_view)
         new_description = await self.view.dndagent.run(player_choice=self.children[0].value)
         scene_view.update_embed(new_description=new_description)
@@ -95,12 +100,17 @@ class ActionModal(discord.ui.Modal):
 
 
 class DnDView(View):
-    def __init__(self, followup, title, dnd_agent):
+    def __init__(self, followup, title, dnd_agent, disable_buttons=False):
             self.dndagent = dnd_agent
             self.action_button = Button(label='Action')
             self.action_button.callback = self.action_button_callback
             self.continue_button = Button(label='Continue')
             self.continue_button.callback = self.continue_button_callback
+
+            if disable_buttons:
+                self.action_button.disabled = True
+                self.continue_button.disabled = True
+
             self.modal = ActionModal(view=self)
             self.title = title
             self.followup = followup
@@ -116,7 +126,7 @@ class DnDView(View):
         action_embed = Embed(title='You chose to continue the scene', colour=discord.Colour.blue())
         thread: Thread = interaction.channel
         await thread.send(embed=action_embed)
-        scene_view = DnDView(followup='Generating next scene..', title=self.title, dnd_agent=self.dndagent)
+        scene_view = DnDView(followup='Generating next scene..', title=self.title, dnd_agent=self.dndagent, disable_buttons=True)
         message: discord.Message = await thread.send(embed=scene_view.embed, view=scene_view)
         new_description = await self.dndagent.run(player_choice=f'Continue generating next event')
         scene_view.update_embed(new_description=new_description)
@@ -124,6 +134,8 @@ class DnDView(View):
 
     def update_embed(self, new_description):
         self.construct_embed(new_description=new_description)
+        self.continue_button.disabled = False
+        self.action_button.disabled = False
 
     def construct_embed(self, new_description):
         self.embed = Embed(title=self.title, colour=discord.Colour.green(),
