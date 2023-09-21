@@ -5,7 +5,7 @@ import sys
 from dotagent import compiler
 from dotagent.memory import SummaryMemory
 from pathlib import Path
-from agents import QueryAgent, IntervieweeAgent, InterviewerAgent
+from agents import QueryAgent, IntervieweeAgent, InterviewerAgent, DnDAgent
 from typing import Dict
 
 class DiscordBot(commands.Bot):
@@ -16,6 +16,8 @@ class DiscordBot(commands.Bot):
         self.interviewee_client = IntervieweeAgent(llm=self.open_ai_llm, memory=SummaryMemory())
         self.interviewer_threads = []
         self.interviewee_threads = []
+        self.dnd_threads = []
+        self.dnd_clients: Dict[int, DnDAgent] = {}
         # self.interview_client = initialize_dotagent_client(llm=query_llm, file_name='interview', memory=SummaryMemory())
         super().__init__(*args, **kwargs)
 

@@ -1,8 +1,10 @@
 {{#system~}}
-{{dungeon_master_info}}
+    {{dungeon_master_info}}
 {{~/system}}
 {{#user~}}
-    Generate the next event in the dungeons and dragons game.
+    Generate the next event in the dungeons and dragons game. Keep the answer up to 1 paragraph long.
+    Player chooses:
+    {{player_choice}}
 {{~/user}}
 {{#assistant~}}
 {{gen 'followup' temperature=0 max_tokens=500}}

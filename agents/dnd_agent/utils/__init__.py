@@ -12,7 +12,6 @@ class DnDUtilityAgent(BaseAgent):
         if llm is None:
             llm = compiler.llms.OpenAI(model='gpt-3.5-turbo-16k')
         self.compiler = initialize_dotagent_client(llm=llm, file_name='dnd_utility', memory=memory, async_mode=True)
-        self.output_key = 'followup'
 
     def agent_type(self):
         return "chat"

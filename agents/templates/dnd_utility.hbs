@@ -11,3 +11,9 @@ Start the prompt with, "You are a dungeon master..
 {{#assistant~}}
 {{gen 'followup' temperature=0 max_tokens=500}}
 {{~/assistant}}
+{{#user~}}
+    Create a short title for this dnd session
+{{/user}}
+{{#assistant~}}
+{{gen 'title' temperature=0 max_tokens=100}}
+{{~/assistant}}

@@ -4,15 +4,17 @@ import logging
 from agents.utils import initialize_dotagent_client
 from .utils import DnDUtilityAgent
 from dotagent import compiler
+from dotagent.compiler import Program
 
 
 class DnDAgent(BaseAgent):
 
-    def __init__(self, llm=None, memory=None, **kwargs):
+    def __init__(self, system_prompt, llm=None, memory=None, **kwargs):
         super().__init__(**kwargs)
         if llm is None:
             llm = compiler.llms.OpenAI(model='gpt-3.5-turbo-16k')
-        self.compiler = initialize_dotagent_client(llm=llm, file_name='dnd', memory=memory, async_mode=True)
+        self.system_prompt = system_prompt
+        self.compiler: Program = initialize_dotagent_client(llm=llm, file_name='dnd', memory=memory, async_mode=True)
         self.output_key = 'followup'
 
     def agent_type(self):
@@ -31,7 +33,7 @@ class DnDAgent(BaseAgent):
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
-            output = await self.compiler(**kwargs)
+            output = await self.compiler(dungeon_master_info=self.system_prompt, **kwargs)
 
         if self.return_complete:
             return output
