@@ -139,7 +139,7 @@ class DnDView(View):
         self.action_button.disabled = False
 
     def construct_embed(self, new_description):
-        self.embed = Embed(title=self.title, colour=discord.Colour.green(),
+        self.embed = Embed(title=self.title, colour=discord.Colour.nitro_pink(),
                            description=new_description)
 
     async def remove_buttons(self, interaction: discord.Interaction):
