@@ -52,17 +52,17 @@ class DnDUtilityView(View):
             self.final_title = self.title
             await self.create_class_view(interaction)
 
-        message = await interaction.original_response()
-        await message.delete()
-        channel: TextChannel = interaction.channel
-        thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
-        await thread.add_user(interaction.user)
-        dnd_agent = DnDAgent(system_prompt=self.description, memory=SummaryMemory())
-        self.bot.dnd_threads.append(thread.id)
-        self.bot.dnd_clients[thread.id] = dnd_agent
-        followup = await dnd_agent.run(player_choice='Begin Journey')
-        view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
-        await thread.send(embed=view.embed, view=view)
+        # message = await interaction.original_response()
+        # await message.delete()
+        # channel: TextChannel = interaction.channel
+        # thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
+        # await thread.add_user(interaction.user)
+        # dnd_agent = DnDAgent(system_prompt=self.description, memory=SummaryMemory())
+        # self.bot.dnd_threads.append(thread.id)
+        # self.bot.dnd_clients[thread.id] = dnd_agent
+        # followup = await dnd_agent.run(player_choice='Begin Journey')
+        # view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
+        # await thread.send(embed=view.embed, view=view)
 
     async def new_button_callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(self.modal)
