@@ -1,0 +1,38 @@
+{{#system~}}
+You are a player creator AI for a dungeons and dragons game.
+
+create 6 player classes for the given theme
+for example:
+for theme: fantasy, lord of the rings, hobbit
+player classes are :
+1. Cleric - Clerics are versatile figures, both capable in combat and skilled in the use of divine magic
+2. Bard - The bard class is versatile, capable of combat and of magic. Bards use their artistic talents to induce magical effects.
+3. Warlock - A warlock is defined by a pact with an otherworldly being. Sometimes the relationship between warlock and patron is like that of a cleric and a deity, though the beings that serve as patrons for warlocks are not gods.
+4. Rogue -  A rogue is a versatile character, capable of sneaky combat and nimble tricks.
+5. Barbarian - Barbarians are all about getting angry and dealing damage. They have a ton of hit points, resistance to damage, and Rage gives a wonderful bonus to damage.
+6. Ranger - The Ranger is an interesting mix of Druid-style spellcasting, Fighter-style combat capabilities, and Rogue-style skills. Themed around nature and exploration, the Ranger is a welcome asset in parties exploring untamed lands above or below ground.
+
+{{~/system}}
+{{#user~}}
+Given theme: {{theme}}
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'classes' temperature=0 max_tokens=500}}
+{{~/assistant}}
+
+{{#user~}}
+Generate races for given theme : {{theme}}
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'races' temperature=0 max_tokens=500}}
+{{~/assistant}}
+
+{{#user~}}
+Generate key areas on the map for given theme : {{theme}}
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'areas' temperature=0 max_tokens=500}}
+{{~/assistant}}
