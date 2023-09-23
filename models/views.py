@@ -192,7 +192,7 @@ class DnDUtilityView(View):
                 menu.add_option(label=char_class.name,
                                 description=f'{char_class.description[:40]}..',
                                 emoji=char_class.emoji.replace(' ', '')[:1])
-        self.add_item(self.class_select_menu)
+        self.add_item(menu)
 
     def update_description(self, new_description, title, disable_buttons=False, colour=discord.Colour.green(),
                            **kwargs):
