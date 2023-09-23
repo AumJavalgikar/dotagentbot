@@ -92,6 +92,8 @@ class DnDUtilityView(View):
                                 title='Select a class for your character!')
         self.chosen_class = chosen_value
         await self.update_message(interaction)
+        await interaction.response.edit_message(embed=self.embed, view=self)
+
 
     async def race_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.race_select_menu.values[0]
@@ -101,7 +103,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {char_class.name} race',
                                 title='Select a race for your character!')
         self.chosen_race = chosen_value
-        await self.update_message(interaction)
+        await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def area_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.area_select_menu.values[0]
@@ -111,7 +113,8 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {char_class.name} area',
                                 title='Select a starting area for your character!')
         self.chosen_area = chosen_value
-        await self.update_message(interaction)
+        await interaction.response.edit_message(embed=self.embed, view=self)
+
     async def new_button_callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(self.modal)
 
