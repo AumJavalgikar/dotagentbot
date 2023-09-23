@@ -75,11 +75,11 @@ class DnDUtilityView(View):
         await self.update_message(interaction)
         response = await self.dnd_utility_agent.run(gen_type='class', theme=self.themes)
         classes = response.get('classes')
-        print(f'classes: {classes}')
+        # print(f'classes: {classes}')
         races = response.get('races')
-        print(f'races: {races}')
+        # print(f'races: {races}')
         areas = response.get('areas')
-        print(f'areas: {areas}')
+        # print(f'areas: {areas}')
 
         class_regex = re.compile(r'[0-9]\. (\w+(?: \w+)*) \((.*)\) - (\w+(?: \w+|.)*)')
         for match in class_regex.finditer(classes):
