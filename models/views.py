@@ -83,8 +83,8 @@ class DnDUtilityView(View):
         # view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
         # await thread.send(embed=view.embed, view=view)
 
-    async def class_select_callback(self, select: Select, interaction: discord.Interaction):
-        chosen_value = select.values[0]
+    async def class_select_callback(self, interaction: discord.Interaction):
+        chosen_value = self.class_select_menu.values[0]
         char_class = [char_class for char_class in self.classes if char_class.name == chosen_value][0]
         self.update_description(new_description=f'Class title : **{char_class.name}**\n\n'
                                                 f'Class description : \n{char_class.description}\n\n'
@@ -93,8 +93,8 @@ class DnDUtilityView(View):
         self.chosen_class = chosen_value
         await self.update_message(interaction)
 
-    async def race_select_callback(self, select: Select, interaction: discord.Interaction):
-        chosen_value = select.values[0]
+    async def race_select_callback(self, interaction: discord.Interaction):
+        chosen_value = self.race_select_menu.values[0]
         char_class = [char_class for char_class in self.races if char_class.name == chosen_value][0]
         self.update_description(new_description=f'Race title : **{char_class.name}**\n\n'
                                                 f'Race description : \n{char_class.description}\n\n'
@@ -103,8 +103,8 @@ class DnDUtilityView(View):
         self.chosen_race = chosen_value
         await self.update_message(interaction)
 
-    async def area_select_callback(self, select: Select, interaction: discord.Interaction):
-        chosen_value = select.values[0]
+    async def area_select_callback(self, interaction: discord.Interaction):
+        chosen_value = self.area_select_menu.values[0]
         char_class = [char_class for char_class in self.areas if char_class.name == chosen_value][0]
         self.update_description(new_description=f'Area title : **{char_class.name}**\n\n'
                                                 f'Area description : \n{char_class.description}\n\n'
