@@ -143,7 +143,7 @@ class PromptModal(discord.ui.Modal):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
-        self.view.update_description('Generating scene..', disable_buttons=True)
+        self.view.update_description('Generating scene..', title='Prompt for DND master', disable_buttons=True)
         await self.view.update_message(interaction)
         output = await self.view.dnd_utility_agent.run(themes=self.children[0].value, gen_type='description')
         new_description = output.get('followup')
