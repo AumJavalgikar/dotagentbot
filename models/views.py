@@ -79,12 +79,11 @@ class DnDUtilityView(View):
         areas = response.get('areas')
 
         class_regex = re.compile(r'[0-9]\. (\w+(?: \w+)*) \((.*)\) - (\w+(?: \w+|.)*)')
-        regex = re.compile(r'[0-9]\. (\w+(?: \w+)*) - (\w+(?: \w+|.)*)')
         for match in class_regex.finditer(classes):
             self.classes.append(CharacterClass(match.groups()))
-        for match in regex.finditer(races):
+        for match in class_regex.finditer(races):
             self.races.append(CharacterClass(match.groups()))
-        for match in regex.finditer(areas):
+        for match in class_regex.finditer(areas):
             self.areas.append(CharacterClass(match.groups()))
         self.update_description(new_description=f'**{self.classes[0].name}**\n\n'
                                                 f'{self.classes[0].description}\n\n'
