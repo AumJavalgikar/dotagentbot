@@ -21,8 +21,15 @@ class DnDUtilityView(View):
         self.races: List[CharacterClass] = []
         self.areas: List[CharacterClass] = []
 
+        self.chosen_class = None
+        self.chosen_race = None
+        self.chosen_area = None
+
+
         self.final_description = None
         self.final_title = None
+        self.final_class = None
+        self.final_race = None
 
         self.embed = Embed(title='Prompt for DND master', colour=discord.Colour.green(),
                            description=self.description)
@@ -42,6 +49,10 @@ class DnDUtilityView(View):
         self.race_select_menu = Select()
         self.area_select_menu = Select()
 
+        self.class_select_menu.callback = self.class_select_callback
+        self.race_select_menu.callback = self.race_select_callback
+        self.area_select_menu.callback = self.area_select_callback
+
         super().__init__(self.accept_button, self.new_button)
 
     async def accept_button_callback(self, interaction: discord.Interaction):
@@ -51,6 +62,14 @@ class DnDUtilityView(View):
             self.final_description = self.description
             self.final_title = self.title
             await self.create_class_view(interaction)
+
+        elif self.final_class is None:
+            self.final_class = self.chosen_class
+            await self.create_race_view(interaction)
+
+        elif self.final_race is None:
+            self.final_race = self.chosen_race
+            await self.create_area_view(interaction)
 
         # message = await interaction.original_response()
         # await message.delete()
@@ -64,6 +83,35 @@ class DnDUtilityView(View):
         # view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
         # await thread.send(embed=view.embed, view=view)
 
+    async def class_select_callback(self, select: Select, interaction: discord.Interaction):
+        chosen_value = select.values[0]
+        char_class = [char_class for char_class in self.classes if char_class.name == chosen_value][0]
+        self.update_description(new_description=f'Class title : **{char_class.name}**\n\n'
+                                                f'Class description : \n{char_class.description}\n\n'
+                                                f'Click **Accept** to choose the {char_class.name} class',
+                                title='Select a class for your character!')
+        self.chosen_class = chosen_value
+        await self.update_message(interaction)
+
+    async def race_select_callback(self, select: Select, interaction: discord.Interaction):
+        chosen_value = select.values[0]
+        char_class = [char_class for char_class in self.races if char_class.name == chosen_value][0]
+        self.update_description(new_description=f'Race title : **{char_class.name}**\n\n'
+                                                f'Race description : \n{char_class.description}\n\n'
+                                                f'Click **Accept** to choose the {char_class.name} race',
+                                title='Select a race for your character!')
+        self.chosen_race = chosen_value
+        await self.update_message(interaction)
+
+    async def area_select_callback(self, select: Select, interaction: discord.Interaction):
+        chosen_value = select.values[0]
+        char_class = [char_class for char_class in self.areas if char_class.name == chosen_value][0]
+        self.update_description(new_description=f'Area title : **{char_class.name}**\n\n'
+                                                f'Area description : \n{char_class.description}\n\n'
+                                                f'Click **Accept** to choose the {char_class.name} area',
+                                title='Select a starting area for your character!')
+        self.chosen_area = chosen_value
+        await self.update_message(interaction)
     async def new_button_callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(self.modal)
 
@@ -91,30 +139,57 @@ class DnDUtilityView(View):
         for match in class_regex.finditer(areas):
             print(f'matches area : {match.groups()}')
             self.areas.append(CharacterClass(match.groups()))
-        self.update_description(new_description=f'**{self.classes[0].name}**\n\n'
-                                                f'{self.classes[0].description}\n\n'
-                                                f'Click Accept to choose the {self.classes[0].name} class',
-                                title='Select a class for your character')
+        self.update_description(new_description=f'Class title : **{self.classes[0].name}**\n\n'
+                                                f'Class description : \n{self.classes[0].description}\n\n'
+                                                f'Click **Accept** to choose the {self.classes[0].name} class',
+                                title='Select a class for your character!')
         self.create_select_menu(menu_type='class')
+        self.chosen_class = self.classes[0].name
+        await self.update_message(interaction)
+
+    async def create_race_view(self, interaction):
+        self.update_description('Generating races..', title='Races for theme', disable_buttons=True)
+        await self.update_message(interaction)
+        self.update_description(new_description=f'Race title : **{self.races[0].name}**\n\n'
+                                                f'Race description : \n{self.races[0].description}\n\n'
+                                                f'Click **Accept** to choose the {self.races[0].name} race',
+                                title='Select a race for your character!')
+        self.create_select_menu(menu_type='race')
+        self.chosen_race = self.races[0].name
+        await self.update_message(interaction)
+
+    async def create_area_view(self, interaction):
+        self.update_description('Generating map areas..', title='Areas for theme', disable_buttons=True)
+        await self.update_message(interaction)
+        self.update_description(new_description=f'Area title : **{self.areas[0].name}**\n\n'
+                                                f'Area description : \n{self.areas[0].description}\n\n'
+                                                f'Click **Accept** to choose the {self.areas[0].name} area',
+                                title='Select a starting area for your character!')
+        self.create_select_menu(menu_type='area')
+        self.chosen_area = self.races[0].name
         await self.update_message(interaction)
 
     def create_select_menu(self, menu_type):
         if menu_type == 'class':
             to_iter_over = self.classes
             menu = self.class_select_menu
+            chosen_value = self.chosen_class
         elif menu_type == 'race':
             to_iter_over = self.races
             menu = self.race_select_menu
+            chosen_value = self.chosen_race
             self.remove_item(self.class_select_menu)
         else:
             to_iter_over = self.areas
             menu = self.area_select_menu
+            chosen_value = self.chosen_area
             self.remove_item(self.race_select_menu)
 
         for char_class in to_iter_over:
-            menu.add_option(label=char_class.name,
-                            description=f'{char_class.description[:40]}..',
-                            emoji=char_class.emoji.replace(' ', '')[:1])
+            if char_class.name != chosen_value:
+                menu.add_option(label=char_class.name,
+                                description=f'{char_class.description[:40]}..',
+                                emoji=char_class.emoji.replace(' ', '')[:1])
         self.add_item(self.class_select_menu)
 
     def update_description(self, new_description, title, disable_buttons=False, colour=discord.Colour.green(),
