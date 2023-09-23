@@ -91,7 +91,6 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {char_class.name} class',
                                 title='Select a class for your character!')
         self.chosen_class = chosen_value
-        await self.update_message(interaction)
         await interaction.response.edit_message(embed=self.embed, view=self)
 
 
