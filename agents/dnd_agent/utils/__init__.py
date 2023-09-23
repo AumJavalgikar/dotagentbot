@@ -11,12 +11,15 @@ class DnDUtilityAgent(BaseAgent):
         super().__init__(**kwargs)
         if llm is None:
             llm = compiler.llms.OpenAI(model='gpt-3.5-turbo-16k')
-        self.compiler = initialize_dotagent_client(llm=llm, file_name='dnd_utility', memory=memory, async_mode=True)
+
+        self.theme_agent = initialize_dotagent_client(llm=llm, file_name='theme', memory=memory, async_mode=True)
+        self.class_agent = initialize_dotagent_client(llm=llm, file_name='class', memory=memory, async_mode=True)
+        self.character_agent = initialize_dotagent_client(llm=llm, file_name='character', memory=memory, async_mode=True)
         self.return_complete = True
     def agent_type(self):
         return "chat"
 
-    async def run(self, **kwargs) -> Union[str, Dict[str, Any]]:
+    async def run(self, gen_type: str, **kwargs) -> Union[str, Dict[str, Any]]:
         """Run the agent to generate a response to the user query."""
 
         _knowledge_variable = self.get_knowledge_variable
@@ -29,7 +32,14 @@ class DnDUtilityAgent(BaseAgent):
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
-            output = await self.compiler(**kwargs)
+            if gen_type.lower() == 'description':
+                output = await self.theme_agent(**kwargs)
+            elif gen_type.lower() == 'class':
+                output = await self.class_agent(**kwargs)
+            elif gen_type.lower() == 'character':
+                output = await self.character_agent(**kwargs)
+            else:
+                output = await self.compiler(**kwargs)
 
         if self.return_complete:
             return output
