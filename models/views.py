@@ -277,6 +277,7 @@ class PromptModal(discord.ui.Modal):
         output = await self.view.dnd_utility_agent.run(themes=self.children[0].value, gen_type='description')
         new_description = output.get('followup')
         title = output.get('title')
+        self.view.title=title
         self.view.update_description(new_description, themes=self.children[0].value, title=title)
         await self.view.update_message(interaction)
 
