@@ -54,7 +54,7 @@ class DnDUtilityView(View):
         self.race_select_menu.callback = self.race_select_callback
         self.area_select_menu.callback = self.area_select_callback
 
-        super().__init__(self.accept_button, self.new_button)
+        super().__init__(self.accept_button, self.new_button, timeout=None)
 
     async def accept_button_callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
@@ -298,7 +298,7 @@ class DnDView(View):
         self.title = title
         self.followup = followup
         self.embed = Embed(title=title, color=discord.Colour.nitro_pink(), description=followup)
-        super().__init__(self.action_button, self.continue_button)
+        super().__init__(self.action_button, self.continue_button, timeout=None)
 
     async def action_button_callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(self.modal)
