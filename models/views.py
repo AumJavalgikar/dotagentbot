@@ -81,7 +81,7 @@ class DnDUtilityView(View):
             return
 
         self.clear_items()
-        await self.update_message()
+        await self.update_message(interaction)
         channel: TextChannel = interaction.channel
         thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
         await thread.add_user(interaction.user)
