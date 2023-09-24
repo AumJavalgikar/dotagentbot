@@ -80,8 +80,8 @@ class DnDUtilityView(View):
             await self.create_stats_view(interaction)
             return
 
-        message = await interaction.original_response()
-        await message.delete()
+        self.clear_items()
+        await self.update_message()
         channel: TextChannel = interaction.channel
         thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
         await thread.add_user(interaction.user)
@@ -89,8 +89,8 @@ class DnDUtilityView(View):
             final_class=self.final_class,
             final_race=self.final_race,
             final_area=self.final_area,
-            final_attributes = self.final_attributes,
-            system_prompt=self.description, memory=SummaryMemory())
+            final_attributes=self.final_attributes,
+            system_prompt=self.final_description, memory=SummaryMemory())
         self.bot.dnd_threads.append(thread.id)
         self.bot.dnd_clients[thread.id] = dnd_agent
         followup = await dnd_agent.run(player_choice='Begin Journey')
@@ -245,8 +245,6 @@ class DnDUtilityView(View):
 
     def update_description(self, new_description, title, disable_buttons=False, colour=discord.Colour.green(),
                            **kwargs):
-        self.description = new_description
-        self.title = title
 
         if (themes := kwargs.get('themes')) is not None:
             self.themes = themes
