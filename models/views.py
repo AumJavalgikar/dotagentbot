@@ -25,11 +25,12 @@ class DnDUtilityView(View):
         self.chosen_race = None
         self.chosen_area = None
 
-
         self.final_description = None
         self.final_title = None
-        self.final_class = None
-        self.final_race = None
+        self.final_class: CharacterClass = None
+        self.final_race: CharacterClass = None
+        self.final_area: CharacterClass = None
+        self.final_attributes: CharacterAttributes = None
 
         self.embed = Embed(title='Prompt for DND master', colour=discord.Colour.green(),
                            description=self.description)
@@ -62,26 +63,39 @@ class DnDUtilityView(View):
             self.final_description = self.description
             self.final_title = self.title
             await self.create_class_view(interaction)
+            return
 
         elif self.final_class is None:
             self.final_class = self.chosen_class
             await self.create_race_view(interaction)
+            return
 
         elif self.final_race is None:
             self.final_race = self.chosen_race
             await self.create_area_view(interaction)
+            return
 
-        # message = await interaction.original_response()
-        # await message.delete()
-        # channel: TextChannel = interaction.channel
-        # thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
-        # await thread.add_user(interaction.user)
-        # dnd_agent = DnDAgent(system_prompt=self.description, memory=SummaryMemory())
-        # self.bot.dnd_threads.append(thread.id)
-        # self.bot.dnd_clients[thread.id] = dnd_agent
-        # followup = await dnd_agent.run(player_choice='Begin Journey')
-        # view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
-        # await thread.send(embed=view.embed, view=view)
+        elif self.final_area is None:
+            self.final_area = self.chosen_area
+            await self.create_stats_view(interaction)
+            return
+
+        message = await interaction.original_response()
+        await message.delete()
+        channel: TextChannel = interaction.channel
+        thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
+        await thread.add_user(interaction.user)
+        dnd_agent = DnDAgent(
+            final_class=self.final_class,
+            final_race=self.final_race,
+            final_area=self.final_area,
+            final_attributes = self.final_attributes,
+            system_prompt=self.description, memory=SummaryMemory())
+        self.bot.dnd_threads.append(thread.id)
+        self.bot.dnd_clients[thread.id] = dnd_agent
+        followup = await dnd_agent.run(player_choice='Begin Journey')
+        view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
+        await thread.send(embed=view.embed, view=view)
 
     async def class_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.class_select_menu.values[0]
@@ -90,28 +104,30 @@ class DnDUtilityView(View):
                                                 f'Class description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose the {char_class.name} class',
                                 title='Select a class for your character!')
-        self.chosen_class = chosen_value
+        self.chosen_class = char_class
         await interaction.response.edit_message(embed=self.embed, view=self)
-
 
     async def race_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.race_select_menu.values[0]
         char_class = [char_class for char_class in self.races if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Race title : **{char_class.name}**\n\n'
+        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n\n'
+                                                f'Race title : **{char_class.name}**\n\n'
                                                 f'Race description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose the {char_class.name} race',
                                 title='Select a race for your character!')
-        self.chosen_race = chosen_value
+        self.chosen_race = char_class
         await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def area_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.area_select_menu.values[0]
         char_class = [char_class for char_class in self.areas if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Area title : **{char_class.name}**\n\n'
+        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
+                                                f'Player race : {self.final_race.emoji} {self.final_race.name}\n\n'
+                                                f'Area title : **{char_class.name}**\n\n'
                                                 f'Area description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose the {char_class.name} area',
                                 title='Select a starting area for your character!')
-        self.chosen_area = chosen_value
+        self.chosen_area = char_class
         await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def new_button_callback(self, interaction: discord.Interaction):
@@ -152,7 +168,8 @@ class DnDUtilityView(View):
     async def create_race_view(self, interaction):
         self.update_description('Generating races..', title='Races for theme', disable_buttons=True)
         await self.update_message(interaction)
-        self.update_description(new_description=f'Race title : **{self.races[0].name}**\n\n'
+        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n\n'
+                                                f'Race title : **{self.races[0].name}**\n\n'
                                                 f'Race description : \n{self.races[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.races[0].name} race',
                                 title='Select a race for your character!')
@@ -163,13 +180,45 @@ class DnDUtilityView(View):
     async def create_area_view(self, interaction):
         self.update_description('Generating map areas..', title='Areas for theme', disable_buttons=True)
         await self.update_message(interaction)
-        self.update_description(new_description=f'Area title : **{self.areas[0].name}**\n\n'
+        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
+                                                f'Player race : {self.final_race.emoji} {self.final_race.name}\n\n'
+                                                f'Area title : **{self.areas[0].name}**\n\n'
                                                 f'Area description : \n{self.areas[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.areas[0].name} area',
                                 title='Select a starting area for your character!')
         self.create_select_menu(menu_type='area')
         self.chosen_area = self.races[0].name
         await self.update_message(interaction)
+
+    async def create_stats_view(self, interaction):
+        self.update_description('Generating stats..', title='Stats for your player', disable_buttons=True)
+        await self.update_message(interaction)
+        response = await self.dnd_utility_agent.run(gen_type='character',
+                                                    player_class=self.final_class.name,
+                                                    player_race=self.final_race.name)
+        attributes = response.get('attributes')
+        regex = re.compile(r'(\w+(?: \w+)*) - (\d+)')
+        attributes_dict = {}
+        for match in regex.finditer(attributes):
+            groups = match.groups()
+            attributes_dict[groups[0]] = int(groups[1])
+        self.final_attributes = CharacterAttributes(attributes_dict)
+        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
+                                                f'Player race : {self.final_race.emoji} {self.final_race.name}\n'
+                                                f'Starting area : {self.final_area.emoji} {self.final_area.name}\n\n'
+                                                f'Your character\'s stats are : \n\n'
+                                                f'Strength : {self.final_attributes.strength}\n'
+                                                f'Constitution : {self.final_attributes.constitution}\n'
+                                                f'Dexterity : {self.final_attributes.dexterity}\n'
+                                                f'Intelligence : {self.final_attributes.intelligence}\n'
+                                                f'Wisdom : {self.final_attributes.wisdom}\n'
+                                                f'Charisma : {self.final_attributes.charisma}',
+                                title='Your final character -')
+        self.remove_select_menu(self.area_select_menu)
+        await self.update_message(interaction)
+
+    def remove_select_menu(self, select_menu):
+        self.remove_item(select_menu)
 
     def create_select_menu(self, menu_type):
         if menu_type == 'class':
@@ -314,3 +363,13 @@ class CharacterClass:
         self.name = group[0]
         self.emoji = group[1]
         self.description = group[2]
+
+
+class CharacterAttributes:
+    def __init__(self, group):
+        self.strength = group.get('Strength')
+        self.constitution = group.get('Constitution')
+        self.dexterity = group.get('Dexterity')
+        self.intelligence = group.get('Intelligence')
+        self.wisdom = group.get('Wisdom')
+        self.charisma = group.get('Charisma')

@@ -9,11 +9,20 @@ from dotagent.compiler import Program
 
 class DnDAgent(BaseAgent):
 
-    def __init__(self, system_prompt, llm=None, memory=None, **kwargs):
+    def __init__(self, system_prompt,
+                 final_class,
+                 final_race,
+                 final_area,
+                 final_attributes,
+                 llm=None, memory=None, **kwargs):
         super().__init__(**kwargs)
         if llm is None:
             llm = compiler.llms.OpenAI(model='gpt-3.5-turbo-16k')
         self.system_prompt = system_prompt
+        self.player_class = final_class,
+        self.player_race = final_race,
+        self.current_area = final_area,
+        self.final_attributes = final_attributes,
         self.compiler: Program = initialize_dotagent_client(llm=llm, file_name='dnd', memory=memory, async_mode=True)
         self.output_key = 'followup'
 
