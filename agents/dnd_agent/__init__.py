@@ -6,6 +6,7 @@ from .utils import DnDUtilityAgent
 from dotagent import compiler
 from dotagent.compiler import Program
 import json
+import ctypes
 
 
 class DnDAgent(BaseAgent):
@@ -67,7 +68,7 @@ class DnDAgent(BaseAgent):
                                          player_race=self.player_race,
                                          player_attributes=self.player_attributes,
                                          current_area=self.current_area,
-                                         dnd_agent=self,
+                                         dnd_agent=id(self),
                                          tool=self.tools,
                                          tool_func=tool_use,
                                          **kwargs)
@@ -86,6 +87,7 @@ class DnDAgent(BaseAgent):
 
 def tool_use(var: dict):
     var = json.loads(var)
-    dnd_agent: DnDAgent = var['dnd_agent']
+    print('VAR:', var)
+    dnd_agent: DnDAgent = ctypes.cast(var['dnd_agent'], ctypes.py_object).value
     tools = (dnd_agent.get_all_classes, dnd_agent.get_all_races, dnd_agent.get_all_areas)
     return tools[int(var['index'])]()
