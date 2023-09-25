@@ -124,7 +124,8 @@ class DnDUtilityView(View):
     async def class_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.class_select_menu.values[0]
         char_class = [char_class for char_class in self.classes if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Class title : **{char_class.name}**\n\n'
+        self.update_description(new_description=f'Player name : {self.final_name}\n\n'
+                                                f'Class title : **{char_class.name}**\n\n'
                                                 f'Class description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose the {char_class.name} class',
                                 title='Select a class for your character!')
@@ -134,7 +135,8 @@ class DnDUtilityView(View):
     async def race_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.race_select_menu.values[0]
         char_class = [char_class for char_class in self.races if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n\n'
+        self.update_description(new_description=f'Player name : {self.final_name}\n\n'
+                                                f'Player class : {self.final_class.emoji} {self.final_class.name}\n\n'
                                                 f'Race title : **{char_class.name}**\n\n'
                                                 f'Race description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose the {char_class.name} race',
@@ -145,7 +147,8 @@ class DnDUtilityView(View):
     async def area_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.area_select_menu.values[0]
         char_class = [char_class for char_class in self.areas if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
+        self.update_description(new_description=f'Player name : {self.final_name}\n\n'
+                                                f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
                                                 f'Player race : {self.final_race.emoji} {self.final_race.name}\n\n'
                                                 f'Area title : **{char_class.name}**\n\n'
                                                 f'Area description : \n{char_class.description}\n\n'
