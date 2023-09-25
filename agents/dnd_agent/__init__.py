@@ -69,7 +69,7 @@ class DnDAgent(BaseAgent):
                                          current_area=self.current_area,
                                          dnd_agent=self,
                                          tool=self.tools,
-                                         tool_use=tool_use,
+                                         tool_func=tool_use,
                                          **kwargs)
 
         if self.return_complete:
