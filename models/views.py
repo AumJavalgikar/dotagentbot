@@ -289,7 +289,7 @@ class DnDUtilityView(View):
             self.remove_item(self.race_select_menu)
 
         for index, char_class in enumerate(to_iter_over):
-            if char_class != chosen_value:
+            if char_class.name != chosen_value.name:
                 menu.add_option(label=char_class.name,
                                 description=f'{char_class.description[:40]}..',
                                 emoji=char_class.emoji.replace(' ', '')[:1],
