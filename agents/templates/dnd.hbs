@@ -45,8 +45,6 @@ Player chooses:
 Think about whether you need to use a tool or not to help you generate the next event.
     If Yes, then answer as 'Tool use : Yes'.
     If No then answer in 'Tool use : No'.
-
-    For now you HAVE to use a tool, any one is fine.
 {{~/user}}
 
 {{#assistant~}}
@@ -60,7 +58,7 @@ else if Tool use is 'No' return empty string.
 
 {{#assistant~}}
 {{gen 'action' temperature=0 max_tokens=500}}
-{{#if (tool_use)!="Tool Use : No"}}
+{{#if (tool_use)=="Tool Use : Yes"}}
 {{(tool_func action)}}
 {{/if}}
 {{~/assistant}}
