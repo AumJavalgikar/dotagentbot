@@ -118,7 +118,7 @@ class DnDUtilityView(View):
                                                 f'Character description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose {char_class.name}',
                                 title='Select a name for your character!')
-        self.chosen_class = char_class
+        self.chosen_name = char_class
         await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def class_select_callback(self, interaction: discord.Interaction):
