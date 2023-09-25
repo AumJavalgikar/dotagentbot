@@ -124,7 +124,7 @@ class DnDUtilityView(View):
     async def class_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.class_select_menu.values[0]
         char_class = [char_class for char_class in self.classes if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Player name : {self.final_name}\n\n'
+        self.update_description(new_description=f'Player name : {self.final_name.name}\n\n'
                                                 f'Class title : **{char_class.name}**\n\n'
                                                 f'Class description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose the {char_class.name} class',
@@ -135,7 +135,7 @@ class DnDUtilityView(View):
     async def race_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.race_select_menu.values[0]
         char_class = [char_class for char_class in self.races if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Player name : {self.final_name}\n\n'
+        self.update_description(new_description=f'Player name : {self.final_name.name}\n\n'
                                                 f'Player class : {self.final_class.emoji} {self.final_class.name}\n\n'
                                                 f'Race title : **{char_class.name}**\n\n'
                                                 f'Race description : \n{char_class.description}\n\n'
@@ -147,7 +147,7 @@ class DnDUtilityView(View):
     async def area_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.area_select_menu.values[0]
         char_class = [char_class for char_class in self.areas if char_class.name == chosen_value][0]
-        self.update_description(new_description=f'Player name : {self.final_name}\n\n'
+        self.update_description(new_description=f'Player name : {self.final_name.name}\n\n'
                                                 f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
                                                 f'Player race : {self.final_race.emoji} {self.final_race.name}\n\n'
                                                 f'Area title : **{char_class.name}**\n\n'
@@ -203,7 +203,8 @@ class DnDUtilityView(View):
 
     async def create_class_view(self, interaction):
         self.update_description('Generating classes..', title='Classes for theme', disable_buttons=True)
-        self.update_description(new_description=f'Class title : **{self.classes[0].name}**\n\n'
+        self.update_description(new_description=f'Player name : {self.final_name.name}\n\n'
+                                                f'Class title : **{self.classes[0].name}**\n\n'
                                                 f'Class description : \n{self.classes[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.classes[0].name} class',
                                 title='Select a class for your character!')
@@ -214,7 +215,8 @@ class DnDUtilityView(View):
     async def create_race_view(self, interaction):
         self.update_description('Generating races..', title='Races for theme', disable_buttons=True)
         await self.update_message(interaction)
-        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n\n'
+        self.update_description(new_description=f'Player name : {self.final_name.name}\n\n'
+                                                f'Player class : {self.final_class.emoji} {self.final_class.name}\n\n'
                                                 f'Race title : **{self.races[0].name}**\n\n'
                                                 f'Race description : \n{self.races[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.races[0].name} race',
@@ -226,7 +228,8 @@ class DnDUtilityView(View):
     async def create_area_view(self, interaction):
         self.update_description('Generating map areas..', title='Areas for theme', disable_buttons=True)
         await self.update_message(interaction)
-        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
+        self.update_description(new_description=f'Player name : {self.final_name.name}\n\n'
+                                                f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
                                                 f'Player race : {self.final_race.emoji} {self.final_race.name}\n\n'
                                                 f'Area title : **{self.areas[0].name}**\n\n'
                                                 f'Area description : \n{self.areas[0].description}\n\n'
@@ -249,7 +252,8 @@ class DnDUtilityView(View):
             groups = match.groups()
             attributes_dict[groups[0]] = int(groups[1])
         self.final_attributes = CharacterAttributes(attributes_dict)
-        self.update_description(new_description=f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
+        self.update_description(new_description=f'Player name : {self.final_name.name}\n\n'
+                                                f'Player class : {self.final_class.emoji} {self.final_class.name}\n'
                                                 f'Player race : {self.final_race.emoji} {self.final_race.name}\n'
                                                 f'Starting area : {self.final_area.emoji} {self.final_area.name}\n\n'
                                                 f'Your character\'s stats are : \n\n'
