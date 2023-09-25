@@ -198,7 +198,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose {self.names[0].name}',
                                 title='Select a name for your character!')
         self.create_select_menu(menu_type='name')
-        self.chosen_name = self.names[0].name
+        self.chosen_name = self.names[0]
         await self.update_message(interaction)
 
     async def create_class_view(self, interaction):
@@ -209,7 +209,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {self.classes[0].name} class',
                                 title='Select a class for your character!')
         self.create_select_menu(menu_type='class')
-        self.chosen_class = self.classes[0].name
+        self.chosen_class = self.classes[0]
         await self.update_message(interaction)
 
     async def create_race_view(self, interaction):
@@ -222,7 +222,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {self.races[0].name} race',
                                 title='Select a race for your character!')
         self.create_select_menu(menu_type='race')
-        self.chosen_race = self.races[0].name
+        self.chosen_race = self.races[0]
         await self.update_message(interaction)
 
     async def create_area_view(self, interaction):
@@ -236,7 +236,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {self.areas[0].name} area',
                                 title='Select a starting area for your character!')
         self.create_select_menu(menu_type='area')
-        self.chosen_area = self.areas[0].name
+        self.chosen_area = self.areas[0]
         await self.update_message(interaction)
 
     async def create_stats_view(self, interaction):
