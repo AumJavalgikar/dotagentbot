@@ -113,7 +113,7 @@ class DnDUtilityView(View):
 
     async def name_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.name_select_menu.values[0]
-        char_class = [char_class for char_class in self.classes if char_class.name == chosen_value][0]
+        char_class = [char_class for char_class in self.names if char_class.name == chosen_value][0]
         self.update_description(new_description=f'Name : **{char_class.name}**\n\n'
                                                 f'Character description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose {char_class.name}',
@@ -194,9 +194,9 @@ class DnDUtilityView(View):
             print(f'matches area : {match.groups()}')
             self.areas.append(CharacterClass(match.groups()))
 
-        self.update_description(new_description=f'Character Name : **{self.classes[0].name}**\n\n'
-                                                f'Character description : \n{self.classes[0].description}\n\n'
-                                                f'Click **Accept** to choose {self.classes[0].name}',
+        self.update_description(new_description=f'Character Name : **{self.names[0].name}**\n\n'
+                                                f'Character description : \n{self.names[0].description}\n\n'
+                                                f'Click **Accept** to choose {self.names[0].name}',
                                 title='Select a name for your character!')
         self.create_select_menu(menu_type='name')
         self.chosen_class = self.classes[0].name
