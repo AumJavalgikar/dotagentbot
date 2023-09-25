@@ -194,8 +194,8 @@ class DnDUtilityView(View):
             print(f'matches area : {match.groups()}')
             self.areas.append(CharacterClass(match.groups()))
 
-        self.update_description(new_description=f'Class title : **{self.classes[0].name}**\n\n'
-                                                f'Class description : \n{self.classes[0].description}\n\n'
+        self.update_description(new_description=f'Character Name : **{self.classes[0].name}**\n\n'
+                                                f'Character description : \n{self.classes[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.classes[0].name} class',
                                 title='Select a class for your character!')
         self.create_select_menu(menu_type='name')
