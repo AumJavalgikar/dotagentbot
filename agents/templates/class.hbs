@@ -24,6 +24,18 @@ Generate classes for given theme, include an emoji for every class : {{theme}}
 {{#block~}}
 
 {{#user~}}
+Generate 5 names for the main character, include description and emoji for each: {{theme}}
+{{~/user}}
+
+{{~/block}}
+
+{{#assistant~}}
+{{gen 'names' temperature=0 max_tokens=500}}
+{{~/assistant}}
+
+{{#block~}}
+
+{{#user~}}
 Generate races for given theme, include an emoji for every race : {{theme}}
 {{~/user}}
 

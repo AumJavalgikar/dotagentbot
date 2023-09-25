@@ -20,10 +20,12 @@ class DnDUtilityView(View):
         self.classes: List[CharacterClass] = []
         self.races: List[CharacterClass] = []
         self.areas: List[CharacterClass] = []
+        self.names: List[CharacterClass] = []
 
         self.chosen_class = None
         self.chosen_race = None
         self.chosen_area = None
+        self.chosen_name = None
 
         self.final_description = None
         self.final_title = None
@@ -31,6 +33,7 @@ class DnDUtilityView(View):
         self.final_race: CharacterClass = None
         self.final_area: CharacterClass = None
         self.final_attributes: CharacterAttributes = None
+        self.final_name = None
 
         self.embed = Embed(title='Prompt for DND master', colour=discord.Colour.green(),
                            description=self.description)
@@ -46,10 +49,12 @@ class DnDUtilityView(View):
 
         self.modal = PromptModal(view=self)
 
+        self.name_select_menu = Select()
         self.class_select_menu = Select()
         self.race_select_menu = Select()
         self.area_select_menu = Select()
 
+        self.name_select_menu.callback = self.name_select_callback
         self.class_select_menu.callback = self.class_select_callback
         self.race_select_menu.callback = self.race_select_callback
         self.area_select_menu.callback = self.area_select_callback
@@ -62,8 +67,12 @@ class DnDUtilityView(View):
         if self.final_description is None:
             self.final_description = self.description
             self.final_title = self.title
-            await self.create_class_view(interaction)
+            await self.create_name_view(interaction)
             return
+
+        elif self.final_name is None:
+            self.final_name = self.chosen_name
+            await self.create_class_view(interaction)
 
         elif self.final_class is None:
             self.final_class = self.chosen_class
@@ -86,16 +95,32 @@ class DnDUtilityView(View):
         thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
         await thread.add_user(interaction.user)
         dnd_agent = DnDAgent(
+            final_name=self.final_name,
             final_class=self.final_class,
             final_race=self.final_race,
             final_area=self.final_area,
             final_attributes=self.final_attributes,
+            all_areas=self.areas,
+            all_races=self.races,
+            all_classes=self.classes,
+            dnd_agent=self,
             system_prompt=self.final_description, memory=SummaryMemory())
         self.bot.dnd_threads.append(thread.id)
         self.bot.dnd_clients[thread.id] = dnd_agent
         followup = await dnd_agent.run(player_choice='Begin Journey')
         view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
         await thread.send(embed=view.embed, view=view)
+
+    async def name_select_callback(self, interaction: discord.Interaction):
+        chosen_value = self.class_select_menu.values[0]
+        char_class = [char_class for char_class in self.classes if char_class.name == chosen_value][0]
+        self.update_description(new_description=f'Name : **{char_class.name}**\n\n'
+                                                f'Character description : \n{char_class.description}\n\n'
+                                                f'Click **Accept** to choose the {char_class.name} class',
+                                title='Select a name for your character!')
+        self.chosen_class = char_class
+        self.create_select_menu(menu_type='name')
+        await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def class_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.class_select_menu.values[0]
@@ -105,6 +130,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {char_class.name} class',
                                 title='Select a class for your character!')
         self.chosen_class = char_class
+        self.create_select_menu(menu_type='class')
         await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def race_select_callback(self, interaction: discord.Interaction):
@@ -116,6 +142,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {char_class.name} race',
                                 title='Select a race for your character!')
         self.chosen_race = char_class
+        self.create_select_menu(menu_type='race')
         await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def area_select_callback(self, interaction: discord.Interaction):
@@ -128,6 +155,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {char_class.name} area',
                                 title='Select a starting area for your character!')
         self.chosen_area = char_class
+        self.create_select_menu(menu_type='area')
         await interaction.response.edit_message(embed=self.embed, view=self)
 
     async def new_button_callback(self, interaction: discord.Interaction):
@@ -136,8 +164,8 @@ class DnDUtilityView(View):
     async def update_message(self, interaction: discord.Interaction):
         await interaction.edit_original_response(embed=self.embed, view=self)
 
-    async def create_class_view(self, interaction):
-        self.update_description('Generating classes..', title='Classes for theme', disable_buttons=True)
+    async def create_name_view(self, interaction):
+        self.update_description('Generating character creator..', title='Create your character!', disable_buttons=True)
         await self.update_message(interaction)
         response = await self.dnd_utility_agent.run(gen_type='class', theme=self.themes)
         classes = response.get('classes')
@@ -146,17 +174,36 @@ class DnDUtilityView(View):
         # print(f'races: {races}')
         areas = response.get('areas')
         # print(f'areas: {areas}')
+        names = response.get('names')
 
         class_regex = re.compile(r'[0-9]\. (\w+(?: \w+)*) \((.*)\) - (\w+(?: \w+|.)*)')
+
+        for match in class_regex.finditer(names):
+            print(f'matches  name : {match.groups()}')
+            self.names.append(CharacterClass(match.groups()))
+
         for match in class_regex.finditer(classes):
             print(f'matches class : {match.groups()}')
             self.classes.append(CharacterClass(match.groups()))
+
         for match in class_regex.finditer(races):
             print(f'matches race : {match.groups()}')
             self.races.append(CharacterClass(match.groups()))
+
         for match in class_regex.finditer(areas):
             print(f'matches area : {match.groups()}')
             self.areas.append(CharacterClass(match.groups()))
+
+        self.update_description(new_description=f'Class title : **{self.classes[0].name}**\n\n'
+                                                f'Class description : \n{self.classes[0].description}\n\n'
+                                                f'Click **Accept** to choose the {self.classes[0].name} class',
+                                title='Select a class for your character!')
+        self.create_select_menu(menu_type='name')
+        self.chosen_class = self.classes[0].name
+        await self.update_message(interaction)
+
+    async def create_class_view(self, interaction):
+        self.update_description('Generating classes..', title='Classes for theme', disable_buttons=True)
         self.update_description(new_description=f'Class title : **{self.classes[0].name}**\n\n'
                                                 f'Class description : \n{self.classes[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.classes[0].name} class',
@@ -221,10 +268,15 @@ class DnDUtilityView(View):
         self.remove_item(select_menu)
 
     def create_select_menu(self, menu_type):
-        if menu_type == 'class':
+        if menu_type == 'name':
+            to_iter_over = self.names
+            menu = self.name_select_menu
+            chosen_value = self.chosen_name
+        elif menu_type == 'class':
             to_iter_over = self.classes
             menu = self.class_select_menu
             chosen_value = self.chosen_class
+            self.remove_item(self.name_select_menu)
         elif menu_type == 'race':
             to_iter_over = self.races
             menu = self.race_select_menu
@@ -236,11 +288,12 @@ class DnDUtilityView(View):
             chosen_value = self.chosen_area
             self.remove_item(self.race_select_menu)
 
-        for char_class in to_iter_over:
-            if char_class.name != chosen_value:
+        for index, char_class in enumerate(to_iter_over):
+            if char_class != chosen_value:
                 menu.add_option(label=char_class.name,
                                 description=f'{char_class.description[:40]}..',
-                                emoji=char_class.emoji.replace(' ', '')[:1])
+                                emoji=char_class.emoji.replace(' ', '')[:1],
+                                default=True if index == 0 else False)
         self.add_item(menu)
 
     def update_description(self, new_description, title, disable_buttons=False, colour=discord.Colour.green(),
@@ -277,7 +330,7 @@ class PromptModal(discord.ui.Modal):
         output = await self.view.dnd_utility_agent.run(themes=self.children[0].value, gen_type='description')
         new_description = output.get('followup')
         title = output.get('title')
-        self.view.title=title
+        self.view.title = title
         self.view.update_description(new_description, themes=self.children[0].value, title=title)
         await self.view.update_message(interaction)
 

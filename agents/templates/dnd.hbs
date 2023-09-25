@@ -21,42 +21,56 @@
             Ask the store owner how much the sword costs
         generated event - (character_name) asks, "How much does this sword cost?" holding the sword up, running his thumb across the edge. "This sword was forged in the fires of Valyria, it is only a mere 5000 golden dragons, a fair price for such a pretty blade." How shall (character_name) respond?
 
-    You have access to the following tools to get story history, map areas, player stats:-
+    Player information :-
+    Player name : {{player_name}}
+    Player class : {{player_class}}
+    Player race : {{player_race}}
+    Player stats : {{player_attributes}}
+
+    Current area : {{current_area}}
+
+    You have access to the following tools:-
     {{tool}}
     {{~#each tool}}
     {{this}}
     {{/each}}
-
-
 {{~/system}}
 
 {{#user~}}
-    Generate the next event in the game based on the player's choice,
-    Player chooses:
-    {{player_choice}}
-    You may generate a random event.
-    Keep the answer up to 1 paragraph long.
-first think whether you need to use a tool or not. answer this in one word either Yes or No.
-{{~/user}}
 
-{{#user~}}
-If the answer is Yes then call the tool using the following format '{"index":[index of the tool to be used in the tools list], "query":[query to be passed]'
-If the answer is No, Generate the next event in the game based on the player's choice: {{player_choice}}. Keep the answer up to 1 paragraph long.
+In the near future you will need to generate the next event in the game based on the player's choice,
+Player chooses:
+{{player_choice}}
+
+Think about whether you need to use a tool or not to help you generate the next event.
+    If Yes, then answer as 'Tool use : Yes'.
+    If No then answer in 'Tool use : No'.
+
+    For now you HAVE to use a tool, any one is fine.
 {{~/user}}
 
 {{#assistant~}}
 {{gen 'tool_use'}}
 {{~/assistant}}
 
+{{#user~}}
+if Tool use is 'Yes' then call the tool using the following format '{"index":[index of the tool to be used in the tools list]}, "dnd_agent":"{{dnd_agent}}"'.
+else if Tool use is 'No' return empty string.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'action' temperature=0 max_tokens=500}}
+{{#if (tool_use)!="No"}}
+{{(tool_func action)}}
+{{/if}}
+{{~/assistant}}
 
 {{#user~}}
-If the answer is Yes then call the tool using the following format '{"index":[index of the tool to be used in the tools list], "query":[query to be passed]'
-If the answer is No, answer to the {{query}} itself.
+    Generate the next event in the game based on the player's choice,
+    Player chooses:
+    {{player_choice}}
 {{~/user}}
 
 {{#assistant~}}
 {{gen 'followup' temperature=0 max_tokens=500}}
-{{#if (tool_use)=="Yes"}}
-{{(tool_func action)}}
-{{/if}}
 {{~/assistant}}
