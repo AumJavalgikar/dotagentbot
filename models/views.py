@@ -272,24 +272,35 @@ class DnDUtilityView(View):
             to_iter_over = self.names
             menu = self.name_select_menu
             chosen_value = self.chosen_name
+            if not first_time:
+                self.remove_item(self.name_select_menu)
         elif menu_type == 'class':
             to_iter_over = self.classes
             menu = self.class_select_menu
             chosen_value = self.chosen_class
-            self.remove_item(self.name_select_menu)
+            if not first_time:
+                self.remove_item(self.class_select_menu)
+            else:
+                self.remove_item(self.name_select_menu)
         elif menu_type == 'race':
             to_iter_over = self.races
             menu = self.race_select_menu
             chosen_value = self.chosen_race
-            self.remove_item(self.class_select_menu)
+            if not first_time:
+                self.remove_item(self.race_select_menu)
+            else:
+                self.remove_item(self.class_select_menu)
         else:
             to_iter_over = self.areas
             menu = self.area_select_menu
             chosen_value = self.chosen_area
-            self.remove_item(self.race_select_menu)
+            if not first_time:
+                self.remove_item(self.area_select_menu)
+            else:
+                self.remove_item(self.race_select_menu)
 
         for index, char_class in enumerate(to_iter_over):
-            if char_class.name != chosen_value.name:
+            if char_class != chosen_value:
                 menu.add_option(label=char_class.name,
                                 description=f'{char_class.description[:40]}..',
                                 emoji=char_class.emoji.replace(' ', '')[:1],
