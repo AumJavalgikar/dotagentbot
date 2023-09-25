@@ -60,7 +60,7 @@ else if Tool use is 'No' return empty string.
 
 {{#assistant~}}
 {{gen 'action' temperature=0 max_tokens=500}}
-{{#if (tool_use)!="No"}}
+{{#if (tool_use)!="Tool Use : No"}}
 {{(tool_func action)}}
 {{/if}}
 {{~/assistant}}
