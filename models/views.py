@@ -104,7 +104,6 @@ class DnDUtilityView(View):
             all_areas=self.areas,
             all_races=self.races,
             all_classes=self.classes,
-            dnd_agent=self,
             system_prompt=self.final_description, memory=SummaryMemory())
         self.bot.dnd_threads.append(thread.id)
         self.bot.dnd_clients[thread.id] = dnd_agent
