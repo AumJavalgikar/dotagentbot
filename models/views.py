@@ -118,7 +118,7 @@ class DnDUtilityView(View):
                                                 f'Character description : \n{char_class.description}\n\n'
                                                 f'Click **Accept** to choose {char_class.name}',
                                 title='Select a name for your character!')
-        self.chosen_class = char_class
+        self.chosen_name = char_class
         self.create_select_menu(menu_type='name')
         await interaction.response.edit_message(embed=self.embed, view=self)
 
