@@ -198,7 +198,7 @@ class DnDUtilityView(View):
                                                 f'Character description : \n{self.names[0].description}\n\n'
                                                 f'Click **Accept** to choose {self.names[0].name}',
                                 title='Select a name for your character!')
-        self.create_select_menu(menu_type='name')
+        self.create_select_menu(menu_type='name', first_time=True)
         self.chosen_class = self.classes[0].name
         await self.update_message(interaction)
 
@@ -208,7 +208,7 @@ class DnDUtilityView(View):
                                                 f'Class description : \n{self.classes[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.classes[0].name} class',
                                 title='Select a class for your character!')
-        self.create_select_menu(menu_type='class')
+        self.create_select_menu(menu_type='class', first_time=True)
         self.chosen_class = self.classes[0].name
         await self.update_message(interaction)
 
@@ -220,7 +220,7 @@ class DnDUtilityView(View):
                                                 f'Race description : \n{self.races[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.races[0].name} race',
                                 title='Select a race for your character!')
-        self.create_select_menu(menu_type='race')
+        self.create_select_menu(menu_type='race', first_time=True)
         self.chosen_race = self.races[0].name
         await self.update_message(interaction)
 
@@ -233,7 +233,7 @@ class DnDUtilityView(View):
                                                 f'Area description : \n{self.areas[0].description}\n\n'
                                                 f'Click **Accept** to choose the {self.areas[0].name} area',
                                 title='Select a starting area for your character!')
-        self.create_select_menu(menu_type='area')
+        self.create_select_menu(menu_type='area', first_time=True)
         self.chosen_area = self.races[0].name
         await self.update_message(interaction)
 
@@ -267,7 +267,7 @@ class DnDUtilityView(View):
     def remove_select_menu(self, select_menu):
         self.remove_item(select_menu)
 
-    def create_select_menu(self, menu_type):
+    def create_select_menu(self, menu_type, first_time=False):
         if menu_type == 'name':
             to_iter_over = self.names
             menu = self.name_select_menu
@@ -293,7 +293,7 @@ class DnDUtilityView(View):
                 menu.add_option(label=char_class.name,
                                 description=f'{char_class.description[:40]}..',
                                 emoji=char_class.emoji.replace(' ', '')[:1],
-                                default=True if index == 0 else False)
+                                default=True if index == 0 and first_time else False)
         self.add_item(menu)
 
     def update_description(self, new_description, title, disable_buttons=False, colour=discord.Colour.green(),
