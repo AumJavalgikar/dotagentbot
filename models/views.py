@@ -112,11 +112,11 @@ class DnDUtilityView(View):
         await thread.send(embed=view.embed, view=view)
 
     async def name_select_callback(self, interaction: discord.Interaction):
-        chosen_value = self.class_select_menu.values[0]
+        chosen_value = self.name_select_menu.values[0]
         char_class = [char_class for char_class in self.classes if char_class.name == chosen_value][0]
         self.update_description(new_description=f'Name : **{char_class.name}**\n\n'
                                                 f'Character description : \n{char_class.description}\n\n'
-                                                f'Click **Accept** to choose the {char_class.name} class',
+                                                f'Click **Accept** to choose {char_class.name}',
                                 title='Select a name for your character!')
         self.chosen_class = char_class
         self.create_select_menu(menu_type='name')
@@ -196,8 +196,8 @@ class DnDUtilityView(View):
 
         self.update_description(new_description=f'Character Name : **{self.classes[0].name}**\n\n'
                                                 f'Character description : \n{self.classes[0].description}\n\n'
-                                                f'Click **Accept** to choose the {self.classes[0].name} class',
-                                title='Select a class for your character!')
+                                                f'Click **Accept** to choose {self.classes[0].name}',
+                                title='Select a name for your character!')
         self.create_select_menu(menu_type='name')
         self.chosen_class = self.classes[0].name
         await self.update_message(interaction)
