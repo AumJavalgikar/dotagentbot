@@ -68,7 +68,7 @@ class DnDAgent(BaseAgent):
                                          player_attributes=self.player_attributes,
                                          current_area=self.current_area,
                                          dnd_agent=self,
-                                         tools=self.tools,
+                                         tool=self.tools,
                                          tool_use=tool_use,
                                          **kwargs)
 
