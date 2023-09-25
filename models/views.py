@@ -73,6 +73,7 @@ class DnDUtilityView(View):
         elif self.final_name is None:
             self.final_name = self.chosen_name
             await self.create_class_view(interaction)
+            return
 
         elif self.final_class is None:
             self.final_class = self.chosen_class
@@ -195,7 +196,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose {self.names[0].name}',
                                 title='Select a name for your character!')
         self.create_select_menu(menu_type='name')
-        self.chosen_class = self.classes[0].name
+        self.chosen_name = self.names[0].name
         await self.update_message(interaction)
 
     async def create_class_view(self, interaction):
@@ -230,7 +231,7 @@ class DnDUtilityView(View):
                                                 f'Click **Accept** to choose the {self.areas[0].name} area',
                                 title='Select a starting area for your character!')
         self.create_select_menu(menu_type='area')
-        self.chosen_area = self.races[0].name
+        self.chosen_area = self.areas[0].name
         await self.update_message(interaction)
 
     async def create_stats_view(self, interaction):
@@ -288,8 +289,7 @@ class DnDUtilityView(View):
             if char_class != chosen_value:
                 menu.add_option(label=char_class.name,
                                 description=f'{char_class.description[:40]}..',
-                                emoji=char_class.emoji.replace(' ', '')[:1],
-                                default=True if index == 0 else False)
+                                emoji=char_class.emoji.replace(' ', '')[:1])
         self.add_item(menu)
 
     def update_description(self, new_description, title, disable_buttons=False, colour=discord.Colour.green(),
