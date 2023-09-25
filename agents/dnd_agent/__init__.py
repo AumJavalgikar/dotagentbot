@@ -85,7 +85,7 @@ class DnDAgent(BaseAgent):
 
 
 def tool_use(var: dict):
+    var = json.loads(var)
     dnd_agent: DnDAgent = var['dnd_agent']
     tools = (dnd_agent.get_all_classes, dnd_agent.get_all_races, dnd_agent.get_all_areas)
-    var = json.loads(var)
     return tools[int(var['index'])]()
