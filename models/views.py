@@ -185,20 +185,22 @@ class DnDUtilityView(View):
 
         class_regex = re.compile(r'[0-9]\. (\w+(?: \w+)*) \((.*)\) - (\w+(?: \w+|.)*)')
 
+        print(f'names: {names}')
+
         for match in class_regex.finditer(names):
             print(f'matches  name : {match.groups()}')
             self.names.append(CharacterClass(match.groups()))
 
         for match in class_regex.finditer(classes):
-            print(f'matches class : {match.groups()}')
+            # print(f'matches class : {match.groups()}')
             self.classes.append(CharacterClass(match.groups()))
 
         for match in class_regex.finditer(races):
-            print(f'matches race : {match.groups()}')
+            # print(f'matches race : {match.groups()}')
             self.races.append(CharacterClass(match.groups()))
 
         for match in class_regex.finditer(areas):
-            print(f'matches area : {match.groups()}')
+            # print(f'matches area : {match.groups()}')
             self.areas.append(CharacterClass(match.groups()))
 
         self.update_description(new_description=f'Character Name : **{self.names[0].name}**\n\n'
