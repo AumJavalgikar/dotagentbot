@@ -272,6 +272,7 @@ class DnDUtilityView(View):
                                                 f'Wisdom : {self.final_attributes.wisdom}\n'
                                                 f'Charisma : {self.final_attributes.charisma}',
                                 title='Your final character -')
+        print(f'new description : {self.embed.description}')
         self.remove_select_menu(self.area_select_menu)
         await self.update_message(interaction)
 
@@ -301,7 +302,7 @@ class DnDUtilityView(View):
 
         for index, char_class in enumerate(to_iter_over):
             if char_class != chosen_value:
-                menu.add_option(label=char_class.name,
+                menu.add_option(label=char_class.name[:100],
                                 description=f'{char_class.description[:40]}..',
                                 emoji=char_class.emoji.replace(' ', '')[:1])
         self.add_item(menu)
