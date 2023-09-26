@@ -21,14 +21,6 @@
             Ask the store owner how much the sword costs
         generated event - (character_name) asks, "How much does this sword cost?" holding the sword up, running his thumb across the edge. "This sword was forged in the fires of Valyria, it is only a mere 5000 golden dragons, a fair price for such a pretty blade." How shall (character_name) respond?
 
-    Player information :-
-    Player name : {{player_name}}
-    Player class : {{player_class}}
-    Player race : {{player_race}}
-    Player stats : {{player_attributes}}
-
-    Current area : {{current_area}}
-
     You have access to the following tools:-
     {{tool}}
     {{~#each tool}}
@@ -64,6 +56,13 @@ else if Tool use is 'No' return empty string.
 {{~/assistant}}
 
 {{#user~}}
+    Player information :-
+    Player name : {{player_name}}
+    Player class : {{player_class}}
+    Player race : {{player_race}}
+    Player stats : {{player_attributes}}
+    Current area : {{current_area}}
+
     Generate the next event in the game based on the player's choice,
     Player chooses:
     {{player_choice}}
