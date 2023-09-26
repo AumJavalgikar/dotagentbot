@@ -63,11 +63,12 @@ class DnDAgent(BaseAgent):
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
             output = await self.compiler(dungeon_master_info=self.system_prompt,
-                                         player_name=self.player_name,
-                                         player_class=self.player_class,
-                                         player_race=self.player_race,
-                                         player_attributes=self.player_attributes,
-                                         current_area=self.current_area,
+                                         player_name=self.player_name.name,
+                                         player_class=self.player_class.name,
+                                         player_race=self.player_race.name,
+                                         player_attributes=self.player_attributes.name,
+                                         current_area=f'Area name: {self.current_area.name}\n'
+                                                      f'Area description {self.current_area.description}',
                                          dnd_agent=id(self),
                                          tool=self.tools,
                                          tool_func=tool_use,
