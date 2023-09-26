@@ -96,14 +96,22 @@ class DnDUtilityView(View):
         thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
         await thread.add_user(interaction.user)
         dnd_agent = DnDAgent(
-            final_name=self.final_name,
-            final_class=self.final_class,
-            final_race=self.final_race,
-            final_area=self.final_area,
-            final_attributes=self.final_attributes,
-            all_areas=self.areas,
-            all_races=self.races,
-            all_classes=self.classes,
+            final_name=self.final_name.name,
+            final_class=self.final_class.name,
+            final_race=self.final_race.name,
+            final_area=f'Area name : {self.final_area.name}\n'
+                       f'Area description : {self.final_area.description}',
+            final_attributes=f'''
+            Strength : {self.final_attributes.strength}
+            Constitution : {self.final_attributes.constitution}
+            Dexterity : {self.final_attributes.dexterity}
+            Intelligence : {self.final_attributes.intelligence}
+            Wisdom : {self.final_attributes.wisdom}
+            Charisma : {self.final_attributes.charisma}
+            ''',
+            all_areas=[area.name for area in self.areas],
+            all_races=[race.name for race in self.races],
+            all_classes=[unique_class.name for unique_class in self.classes],
             system_prompt=self.final_description, memory=SummaryMemory())
         self.bot.dnd_threads.append(thread.id)
         self.bot.dnd_clients[thread.id] = dnd_agent
