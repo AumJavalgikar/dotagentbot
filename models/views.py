@@ -183,7 +183,7 @@ class DnDUtilityView(View):
         # print(f'areas: {areas}')
         names = response.get('names')
 
-        class_regex = re.compile(r'[0-9]\. (\w+(?: \w+)*) \((.*)\) - (\w+(?: \w+|.)*)')
+        class_regex = re.compile(r'[0-9]\. ([a-zA-Z0-9\"\'\-,()]+(?: [a-zA-Z0-9\"\'\-,()]+)*) \((.*)\) - (\w+(?: \w+|.)*)')
 
         print(f'names: {names}')
 
