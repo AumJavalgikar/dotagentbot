@@ -37,33 +37,6 @@
 {{~/system}}
 
 {{#user~}}
-
-In the near future you will need to generate the next event in the game based on the player's choice,
-Player chooses:
-{{player_choice}}
-
-Think about whether you need to use a tool or not to help you generate the next event.
-    If Yes, then answer as 'Tool use : Yes'.
-    If No then answer in 'Tool use : No'.
-{{~/user}}
-
-{{#assistant~}}
-{{gen 'tool_use'}}
-{{~/assistant}}
-
-{{#user~}}
-if Tool use is 'Yes' then call the tool using the following format '{"index":[index of the tool to be used in the tools list]}, "dnd_agent":"{{dnd_agent}}"'.
-else if Tool use is 'No' return empty string.
-{{~/user}}
-
-{{#assistant~}}
-{{gen 'action' temperature=0 max_tokens=500}}
-{{#if (tool_use)=="Tool Use : Yes"}}
-{{(tool_func action)}}
-{{/if}}
-{{~/assistant}}
-
-{{#user~}}
     Generate the next event in the game based on the player's choice,
     Player chooses:
     {{player_choice}}
