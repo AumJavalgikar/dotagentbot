@@ -37,8 +37,8 @@ class DnDAgent(BaseAgent):
         self.current_area = final_area,
         self.tools = (self.get_all_classes, self.get_all_races, self.get_all_areas)
         self.compiler: Program = initialize_dotagent_client(llm=llm, file_name='dnd', memory=memory, async_mode=True)
-        self.output_key = 'followup'
-        # self.return_complete = True
+        # self.output_key = 'followup'
+        self.return_complete = True
 
     def agent_type(self):
         return "chat"
@@ -146,9 +146,9 @@ class DnDAgent(BaseAgent):
             print('Finished compiler call..')
             # Add new memory to ConversationHistory
             # print(f'self.compiler.memory : {self.compiler.memory}')
-            if self.compiler.memory is not None:
+            # if self.compiler.memory is not None:
                 # print('Found memory, calling self._handle_memory()')
-                self._handle_memory(output)
+                # self._handle_memory(output)
 
         if self.return_complete:
             return output
