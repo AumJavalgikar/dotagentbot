@@ -419,9 +419,12 @@ class ActionModal(discord.ui.Modal):
                              dnd_agent=self.view.dndagent, disable_buttons=True)
         message: discord.Message = await thread.send(embed=scene_view.embed, view=scene_view)
         new_description = await self.view.dndagent.arun(player_choice=self.children[0].value)
-        print('Received new description! now editing embed..')
+        print('Received new description! now updating embed..')
         scene_view.update_embed(new_description=new_description)
+        print('Finished updating embed! now editing message')
         await message.edit(embed=scene_view.embed, view=scene_view)
+        print('Finished editing message! now scheduled update task should run..')
+
 
 
 class CharacterClass:
