@@ -418,13 +418,19 @@ class ActionModal(discord.ui.Modal):
         scene_view = DnDView(followup='Generating next scene..', title=self.view.title,
                              dnd_agent=self.view.dndagent, disable_buttons=True)
         message: discord.Message = await thread.send(embed=scene_view.embed, view=scene_view)
+
         new_description = await self.view.dndagent.arun(player_choice=self.children[0].value)
+
         print('Received new description! now updating embed..')
+
         scene_view.update_embed(new_description=new_description.get('followup'))
+
         print('Finished updating embed! now editing message')
+
         await message.edit(embed=scene_view.embed, view=scene_view)
+
         print('Finished editing message! now scheduled update task should run..')
-        await self.view.dndagent._update_memory(new_program=new_description)
+        # await self.view.dndagent._update_memory(new_program=new_description)
 
 
 
