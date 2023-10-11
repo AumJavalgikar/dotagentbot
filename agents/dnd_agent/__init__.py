@@ -76,7 +76,7 @@ class DnDAgent(BaseAgent):
                 )
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
-        else:\
+        else:
             output = await self.compiler(dungeon_master_info=self.system_prompt,
                                          player_name=self.player_name,
                                          player_class=self.player_class,
