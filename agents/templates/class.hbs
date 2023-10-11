@@ -13,6 +13,9 @@ player classes are :
 6. Ranger (🏇)- The Ranger is an interesting mix of Druid-style spellcasting, Fighter-style combat capabilities, and Rogue-style skills. Themed around nature and exploration, the Ranger is a welcome asset in parties exploring untamed lands above or below ground.
 
 {{~/system}}
+
+{{#block hidden=True~}}
+
 {{#user~}}
 Generate classes for given theme, include an emoji for every class : {{theme}}
 {{~/user}}
@@ -21,38 +24,41 @@ Generate classes for given theme, include an emoji for every class : {{theme}}
 {{gen 'classes' temperature=0 max_tokens=500}}
 {{~/assistant}}
 
-{{#block~}}
+{{~/block}}
+
+{{#block hidden=True~}}
 
 {{#user~}}
 Generate 5 names for the main character, include description and emoji for each: {{theme}}
 {{~/user}}
 
-{{~/block}}
-
 {{#assistant~}}
 {{gen 'names' temperature=0 max_tokens=500}}
 {{~/assistant}}
 
-{{#block~}}
+{{~/block}}
+
+
+{{#block hidden=True~}}
 
 {{#user~}}
 Generate races for given theme, include an emoji for every race : {{theme}}
 {{~/user}}
 
-{{~/block}}
-
-
 {{#assistant~}}
 {{gen 'races' temperature=0 max_tokens=500}}
 {{~/assistant}}
 
-{{#block~}}
+{{~/block}}
+
+{{#block hidden=True~}}
 
 {{#user~}}
 Generate key areas on the map for given theme, include an emoji for every area : {{theme}}
 {{~/user}}
 
-{{~/block}}
 {{#assistant~}}
 {{gen 'areas' temperature=0 max_tokens=500}}
 {{~/assistant}}
+
+{{~/block}}
