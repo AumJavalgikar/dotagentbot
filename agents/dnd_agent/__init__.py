@@ -37,8 +37,8 @@ class DnDAgent(BaseAgent):
         self.current_area = final_area,
         self.tools = (self.get_all_classes, self.get_all_races, self.get_all_areas)
         self.compiler: Program = initialize_dotagent_client(llm=llm, file_name='dnd', memory=memory, async_mode=True)
-        # self.output_key = 'followup'
-        self.return_complete = True
+        self.output_key = 'followup'
+        # self.return_complete = True
 
     def agent_type(self):
         return "chat"
