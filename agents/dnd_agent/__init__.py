@@ -76,8 +76,18 @@ class DnDAgent(BaseAgent):
                 )
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
-        else:
-            output = self.compiler(**kwargs, silent=True, from_agent=True)
+        else:\
+            output = await self.compiler(dungeon_master_info=self.system_prompt,
+                                         player_name=self.player_name,
+                                         player_class=self.player_class,
+                                         player_race=self.player_race,
+                                         player_attributes=self.player_attributes,
+                                         current_area=f'Area name: {self.current_area}\n'
+                                                      f'Area description {self.current_area}',
+                                         dnd_agent=id(self),
+                                         tool=self.tools,
+                                         tool_func=tool_use,
+                                         **kwargs, silent=True, from_agent=True)
 
             # Handle memory here
             if self.compiler.memory is not None:
