@@ -115,7 +115,7 @@ class DnDUtilityView(View):
             system_prompt=self.final_description, memory=SummaryMemory())
         self.bot.dnd_threads.append(thread.id)
         self.bot.dnd_clients[thread.id] = dnd_agent
-        followup = await dnd_agent.run(player_choice='Begin Journey')
+        followup = await dnd_agent.arun(player_choice='Begin Journey')
         view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
         await thread.send(embed=view.embed, view=view)
 
@@ -378,7 +378,7 @@ class DnDView(View):
         scene_view = DnDView(followup='Generating next scene..', title=self.title, dnd_agent=self.dndagent,
                              disable_buttons=True)
         message: discord.Message = await thread.send(embed=scene_view.embed, view=scene_view)
-        new_description = await self.dndagent.run(player_choice=f'Continue generating next event')
+        new_description = await self.dndagent.arun(player_choice=f'Continue generating next event')
         scene_view.update_embed(new_description=new_description)
         await message.edit(embed=scene_view.embed, view=scene_view)
 
@@ -418,7 +418,7 @@ class ActionModal(discord.ui.Modal):
         scene_view = DnDView(followup='Generating next scene..', title=self.view.title,
                              dnd_agent=self.view.dndagent, disable_buttons=True)
         message: discord.Message = await thread.send(embed=scene_view.embed, view=scene_view)
-        new_description = await self.view.dndagent.run(player_choice=self.children[0].value)
+        new_description = await self.view.dndagent.arun(player_choice=self.children[0].value)
         scene_view.update_embed(new_description=new_description)
         await message.edit(embed=scene_view.embed, view=scene_view)
 
