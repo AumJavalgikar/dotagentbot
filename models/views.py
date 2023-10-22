@@ -116,8 +116,9 @@ class DnDUtilityView(View):
         self.bot.dnd_threads.append(thread.id)
         self.bot.dnd_clients[thread.id] = dnd_agent
         followup = await dnd_agent.arun(player_choice='Begin Journey')
-        view = DnDView(followup=followup, title=self.title, dnd_agent=dnd_agent)
+        view = DnDView(followup=followup.get('followup'), title=self.title, dnd_agent=dnd_agent)
         await thread.send(embed=view.embed, view=view)
+        await dnd_agent._update_memory(new_program=followup)
 
     async def name_select_callback(self, interaction: discord.Interaction):
         chosen_value = self.name_select_menu.values[0]
@@ -379,8 +380,10 @@ class DnDView(View):
                              disable_buttons=True)
         message: discord.Message = await thread.send(embed=scene_view.embed, view=scene_view)
         new_description = await self.dndagent.arun(player_choice=f'Continue generating next event')
-        scene_view.update_embed(new_description=new_description)
+        scene_view.update_embed(new_description=new_description.get('followup'))
         await message.edit(embed=scene_view.embed, view=scene_view)
+        await self.dndagent._update_memory(new_program=new_description)
+
 
     def update_embed(self, new_description):
         self.construct_embed(new_description=new_description)
@@ -430,7 +433,7 @@ class ActionModal(discord.ui.Modal):
         await message.edit(embed=scene_view.embed, view=scene_view)
 
         print('Finished editing message! now scheduled update task should run..')
-        # await self.view.dndagent._update_memory(new_program=new_description)
+        await self.view.dndagent._update_memory(new_program=new_description)
 
 
 

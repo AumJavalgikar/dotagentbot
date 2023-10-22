@@ -146,9 +146,9 @@ class DnDAgent(BaseAgent):
             print('Finished compiler call..')
             # Add new memory to ConversationHistory
             # print(f'self.compiler.memory : {self.compiler.memory}')
-            if self.compiler.memory is not None:
-                print('Found memory, calling self._handle_memory()')
-                self._handle_memory(output)
+            # if self.compiler.memory is not None:
+                # print('Found memory, calling self._handle_memory()')
+                # self._handle_memory(output)
 
         if self.return_complete:
             return output
