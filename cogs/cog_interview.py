@@ -24,7 +24,7 @@ class cog_interview(commands.Cog):
         ], description='What role will the Bot play?')):
         await ctx.defer()
         if type == 'interviewer':
-            interviewer_client = InterviewerAgent(llm=self.bot.open_ai_llm,
+            interviewer_client = InterviewerAgent(llm=self.bot.llm,
                 memory=InterviewerMemory(max_questions=2, interview_goals=['Python', 'Github', 'OpenAI API']))
 
             response = await interviewer_client.run(query=f'Hello, my name is {ctx.user.name}, '

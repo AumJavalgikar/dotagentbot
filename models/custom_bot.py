@@ -10,7 +10,7 @@ from typing import Dict
 
 class DiscordBot(commands.Bot):
     def __init__(self, openai_key, *args, **kwargs):
-        llm_azure = engine.llms.OpenAI(
+        self.llm = engine.llms.OpenAI(
             model="gpt-3.5-turbo",
             api_type="azure",
             api_key=openai_key,
@@ -19,9 +19,9 @@ class DiscordBot(commands.Bot):
             deployment_id="gpt-3.5-turbo-dec",
             caching=False,
         )
-        self.query_client = QueryAgent(llm=llm_azure, memory=SummaryMemory())
+        self.query_client = QueryAgent(llm=self.llm, memory=SummaryMemory())
         self.interviewer_clients: Dict[int, InterviewerAgent] = {}
-        self.interviewee_client = IntervieweeAgent(llm=llm_azure, memory=SummaryMemory())
+        self.interviewee_client = IntervieweeAgent(llm=self.llm, memory=SummaryMemory())
         self.interviewer_threads = []
         self.interviewee_threads = []
         self.dnd_threads = []

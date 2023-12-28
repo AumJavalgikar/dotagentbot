@@ -96,6 +96,7 @@ class DnDUtilityView(View):
         thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
         await thread.add_user(interaction.user)
         dnd_agent = DnDAgent(
+            llm=self.bot.llm,
             final_name=self.final_name.name,
             final_class=self.final_class.name,
             final_race=self.final_race.name,
