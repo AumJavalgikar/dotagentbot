@@ -1,7 +1,7 @@
 from typing import Any, Dict, Union
 from nextpy.ai.agent.base_agent import BaseAgent
 import logging
-from agents.utils import initialize_nextpy.ai_client
+from agents.utils import initialize_dotagent_client
 from nextpy.ai import engine
 
 
