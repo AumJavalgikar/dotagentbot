@@ -11,12 +11,12 @@ from typing import Dict
 class DiscordBot(commands.Bot):
     def __init__(self, openai_key, *args, **kwargs):
         llm_azure = engine.llms.OpenAI(
-            model="gpt-3.5-turbo-dec",
+            model="gpt-3.5-turbo",
             api_type="azure",
             api_key=openai_key,
             api_base="https://zenoptestopenai.openai.azure.com/",
             api_version="2023-07-01-preview",
-            deployment_id="DEPLOYMENT_NAME_IN_AZURE",
+            deployment_id="gpt-3.5-turbo-dec",
             caching=False,
         )
         self.query_client = QueryAgent(llm=llm_azure, memory=SummaryMemory())
