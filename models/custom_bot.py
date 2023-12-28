@@ -11,7 +11,7 @@ from typing import Dict
 class DiscordBot(commands.Bot):
     def __init__(self, openai_key, *args, **kwargs):
         llm_azure = engine.llms.OpenAI(
-            "gpt-3.5-turbo-dec",
+            model="gpt-3.5-turbo-dec",
             api_type="azure",
             api_key=openai_key,
             api_base="https://zenoptestopenai.openai.azure.com/",
