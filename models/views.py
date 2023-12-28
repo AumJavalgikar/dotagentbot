@@ -38,7 +38,7 @@ class DnDUtilityView(View):
         self.embed = Embed(title='Prompt for DND master', colour=discord.Colour.green(),
                            description=self.description)
 
-        self.dnd_utility_agent = DnDUtilityAgent()
+        self.dnd_utility_agent = DnDUtilityAgent(llm=self.bot.llm)
 
         self.accept_button = Button(label='Accept', style=discord.ButtonStyle.green)
         self.accept_button.callback = self.accept_button_callback

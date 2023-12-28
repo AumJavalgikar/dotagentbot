@@ -8,7 +8,7 @@ from nextpy.ai import engine
 class DnDUtilityAgent(BaseAgent):
 
     def __init__(self, llm=None, memory=None, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(llm=llm, **kwargs)
         if llm is None:
             llm = engine.llms.OpenAI(model='gpt-3.5-turbo-16k')
 
