@@ -16,7 +16,7 @@ class DiscordBot(commands.Bot):
             api_key=openai_key,
             api_base="https://zenoptestopenai.openai.azure.com/",
             api_version="2023-07-01-preview",
-            deployment_id="gpt-3.5-turbo-dec",
+            deployment_id="gpt-35-turbo-dec",
             caching=False,
         )
         self.query_client = QueryAgent(llm=self.llm, memory=SummaryMemory())
