@@ -7,7 +7,7 @@ from agents.utils import initialize_dotagent_client
 class IntervieweeAgent(BaseAgent):
 
     def __init__(self, llm, memory, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(llm=llm, **kwargs)
         self.engine = initialize_dotagent_client(llm=llm, file_name='interviewee', memory=memory, async_mode=True)
         self.output_key = 'followup'
 
