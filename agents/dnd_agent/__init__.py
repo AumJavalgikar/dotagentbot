@@ -23,7 +23,7 @@ class DnDAgent(BaseAgent):
                  all_races,
                  all_classes,
                  llm=None, memory=None, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(llm=llm, **kwargs)
         if llm is None:
             llm = engine.llms.OpenAI(model='gpt-3.5-turbo-16k')
         self.all_areas = all_areas,
