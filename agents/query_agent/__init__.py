@@ -1,5 +1,5 @@
 from typing import Any, Dict, Union
-from dotagent.agent.base_agent import BaseAgent
+from nextpy.ai.agent.base_agent import BaseAgent
 import logging
 from agents.utils import initialize_dotagent_client
 
@@ -8,7 +8,7 @@ class QueryAgent(BaseAgent):
 
     def __init__(self, llm, memory, **kwargs):
         super().__init__(**kwargs)
-        self.compiler = initialize_dotagent_client(llm=llm, file_name='query', memory=memory, async_mode=True)
+        self.engine = initialize_dotagent_client(llm=llm, file_name='query', memory=memory, async_mode=True)
         self.output_key = 'answer'
 
     def agent_type(self):
@@ -23,11 +23,11 @@ class QueryAgent(BaseAgent):
             if kwargs.get(_knowledge_variable):
                 query = kwargs.get(_knowledge_variable)
                 retrieved_knowledge = self.get_knowledge(query)
-                output = self.compiler(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
+                output = self.engine(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
-            output = await self.compiler(**kwargs)
+            output = await self.engine(**kwargs)
 
         if self.return_complete:
             return output

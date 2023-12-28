@@ -1,9 +1,9 @@
-from dotagent.memory import BaseMemory
+from nextpy.ai.memory import BaseMemory
 from pydantic import BaseModel
 from typing import List, Dict, Any
-from dotagent.schema import BaseMessage
+from nextpy.ai.schema import BaseMessage
 from .prompt import INTERVIEWER_SUMMARIZER_TEMPLATE
-from dotagent import compiler
+from nextpy.ai import engine
 from pydantic import Field
 
 
@@ -34,7 +34,7 @@ class InterviewerMemory(BaseMemory, BaseModel):
     def get_memory(self, **kwargs) -> str:
         """Retrieve entire memory from the store."""
         # Create llm instance
-        llm = compiler.llms.OpenAI(model="gpt-3.5-turbo")
+        llm = engine.llms.OpenAI(model="gpt-3.5-turbo")
 
         new_messages = [item for item in self.messages if item not in self.messages_in_summary]
         if len(new_messages) != 0:
@@ -44,7 +44,7 @@ class InterviewerMemory(BaseMemory, BaseModel):
                     'llm_response'] + "\n"
                 self.messages_in_summary.append(conversation)
 
-            summarizer = compiler(template=INTERVIEWER_SUMMARIZER_TEMPLATE, llm=llm, stream=False,
+            summarizer = engine(template=INTERVIEWER_SUMMARIZER_TEMPLATE, llm=llm, stream=False,
                                   max_questions=self.max_questions, interview_goals=self.interview_goals)
             summarized_memory = summarizer(summary=self.current_summary, new_lines=messages_to_text)
             self.current_summary = extract_text(summarized_memory.text)
@@ -72,7 +72,7 @@ class InterviewerMemory(BaseMemory, BaseModel):
                             'llm_response'] + "Interviewee: " + conversation['prompt'] + "\n"
                         self.messages_in_summary.append(conversation)
 
-                    summarizer = compiler(template=INTERVIEWER_SUMMARIZER_TEMPLATE, llm=llm, stream=False,
+                    summarizer = engine(template=INTERVIEWER_SUMMARIZER_TEMPLATE, llm=llm, stream=False,
                                   max_questions=self.max_questions, interview_goals=self.interview_goals, async_mode=True)
                     summarized_memory = summarizer(summary="", new_lines=messages_to_text)
                     summarized_memory = "Current conversation:\n" + extract_text(summarized_memory.text)

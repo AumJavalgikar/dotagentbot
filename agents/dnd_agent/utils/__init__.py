@@ -1,8 +1,8 @@
 from typing import Any, Dict, Union
-from dotagent.agent.base_agent import BaseAgent
+from nextpy.ai.agent.base_agent import BaseAgent
 import logging
-from agents.utils import initialize_dotagent_client
-from dotagent import compiler
+from agents.utils import initialize_nextpy.ai_client
+from nextpy.ai import engine
 
 
 class DnDUtilityAgent(BaseAgent):
@@ -10,7 +10,7 @@ class DnDUtilityAgent(BaseAgent):
     def __init__(self, llm=None, memory=None, **kwargs):
         super().__init__(**kwargs)
         if llm is None:
-            llm = compiler.llms.OpenAI(model='gpt-3.5-turbo-16k')
+            llm = engine.llms.OpenAI(model='gpt-3.5-turbo-16k')
 
         self.theme_agent = initialize_dotagent_client(llm=llm, file_name='theme', memory=memory, async_mode=True)
         self.class_agent = initialize_dotagent_client(llm=llm, file_name='class', memory=memory, async_mode=True)
@@ -28,7 +28,7 @@ class DnDUtilityAgent(BaseAgent):
             if kwargs.get(_knowledge_variable):
                 query = kwargs.get(_knowledge_variable)
                 retrieved_knowledge = self.get_knowledge(query)
-                output = self.compiler(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
+                output = self.engine(RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True)
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
@@ -39,7 +39,7 @@ class DnDUtilityAgent(BaseAgent):
             elif gen_type.lower() == 'character':
                 output = await self.character_agent(**kwargs)
             else:
-                output = await self.compiler(**kwargs)
+                output = await self.engine(**kwargs)
 
         if self.return_complete:
             return output

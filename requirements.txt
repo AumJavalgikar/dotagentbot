@@ -1,3 +1,3 @@
 py-cord
 python-dotenv
-dotagent
+nextpy

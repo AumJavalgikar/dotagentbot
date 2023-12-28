@@ -1,14 +1,14 @@
 from typing import Any, Dict, Union
-from dotagent.agent.base_agent import BaseAgent
+from nextpy.ai.agent.base_agent import BaseAgent
 import logging
 from agents.utils import initialize_dotagent_client
 from .utils import DnDUtilityAgent
-from dotagent import compiler
-from dotagent.compiler import Program
+from nextpy.ai import engine
+from nextpy.ai.engine import Program
 import json
 import ctypes
 import asyncio
-from dotagent.compiler._program import extract_text
+from nextpy.ai.engine._program import extract_text
 import nest_asyncio
 
 class DnDAgent(BaseAgent):
@@ -25,7 +25,7 @@ class DnDAgent(BaseAgent):
                  llm=None, memory=None, **kwargs):
         super().__init__(**kwargs)
         if llm is None:
-            llm = compiler.llms.OpenAI(model='gpt-3.5-turbo-16k')
+            llm = engine.llms.OpenAI(model='gpt-3.5-turbo-16k')
         self.all_areas = all_areas,
         self.all_races = all_races,
         self.all_classes = all_classes,
@@ -36,7 +36,7 @@ class DnDAgent(BaseAgent):
         self.player_attributes = final_attributes,
         self.current_area = final_area,
         self.tools = (self.get_all_classes, self.get_all_races, self.get_all_areas)
-        self.compiler: Program = initialize_dotagent_client(llm=llm, file_name='dnd', memory=memory, async_mode=True)
+        self.engine: Program = initialize_dotagent_client(llm=llm, file_name='dnd', memory=memory, async_mode=True)
         # self.output_key = 'followup'
         self.return_complete = True
 
@@ -71,13 +71,13 @@ class DnDAgent(BaseAgent):
             if kwargs.get(_knowledge_variable):
                 query = kwargs.get(_knowledge_variable)
                 retrieved_knowledge = self.get_knowledge(query)
-                output = self.compiler(
+                output = self.engine(
                     RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True
                 )
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
-            output = await self.compiler(dungeon_master_info=self.system_prompt,
+            output = await self.engine(dungeon_master_info=self.system_prompt,
                                          player_name=self.player_name,
                                          player_class=self.player_class,
                                          player_race=self.player_race,
@@ -90,7 +90,7 @@ class DnDAgent(BaseAgent):
                                          **kwargs, silent=True, from_agent=True)
 
             # Handle memory here
-            if self.compiler.memory is not None:
+            if self.engine.memory is not None:
                 self._handle_memory(output)
 
         if self.return_complete:
@@ -125,14 +125,14 @@ class DnDAgent(BaseAgent):
             if kwargs.get(_knowledge_variable):
                 query = kwargs.get(_knowledge_variable)
                 retrieved_knowledge = self.get_knowledge(query)
-                output = self.compiler(
+                output = self.engine(
                     RETRIEVED_KNOWLEDGE=retrieved_knowledge, **kwargs, silent=True
                 )
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
             print('Calling compiler..')
-            output = await self.compiler(dungeon_master_info=self.system_prompt,
+            output = await self.engine(dungeon_master_info=self.system_prompt,
                                          player_name=self.player_name,
                                          player_class=self.player_class,
                                          player_race=self.player_race,
@@ -167,7 +167,7 @@ class DnDAgent(BaseAgent):
 
     def _handle_memory(self, new_program):
         print('In handle memory')
-        if self.compiler.async_mode:
+        if self.engine.async_mode:
             print('Async mode is true')
             loop = asyncio.get_event_loop()
             assert loop.is_running(), "The program is in async mode but there is no asyncio event loop running! Start one and try again."
@@ -187,22 +187,22 @@ class DnDAgent(BaseAgent):
     async def _update_memory(self, new_program):
         print('\nIn update memory..\n')
         all_text = extract_text(new_program.text)
-        if asyncio.iscoroutine(self.compiler.memory.add_memory):
+        if asyncio.iscoroutine(self.engine.memory.add_memory):
             for text_block in all_text:
                 for value in text_block:
-                    await self.compiler.memory.add_memory(prompt=value, llm_response=text_block[value])
+                    await self.engine.memory.add_memory(prompt=value, llm_response=text_block[value])
         else:
             for text_block in all_text:
                 for value in text_block:
                     print(f'adding user : {value} llm_response: {text_block[value]} to memory')
-                    self.compiler.memory.add_memory(prompt=value, llm_response=text_block[value])
-        print(f'Current memory prompts : {self.compiler.memory.memory_prompts}')
+                    self.engine.memory.add_memory(prompt=value, llm_response=text_block[value])
+        print(f'Current memory prompts : {self.engine.memory.memory_prompts}')
 
-        if asyncio.iscoroutine(self.compiler.memory.get_memory):
-            self.compiler.ConversationHistory = await self.compiler.memory.get_memory()
+        if asyncio.iscoroutine(self.engine.memory.get_memory):
+            self.engine.ConversationHistory = await self.engine.memory.get_memory()
         else:
-            self.compiler.ConversationHistory = self.compiler.memory.get_memory()
-        print(f'\nUpdated memory successfully!\nCurrent ConvHistory: {self.compiler.ConversationHistory}\n\n')
+            self.engine.ConversationHistory = self.engine.memory.get_memory()
+        print(f'\nUpdated memory successfully!\nCurrent ConvHistory: {self.engine.ConversationHistory}\n\n')
 
 
 def tool_use(var: dict):

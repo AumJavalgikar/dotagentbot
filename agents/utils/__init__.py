@@ -1,10 +1,16 @@
-from dotagent import compiler
+from nextpy.ai import engine
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
+
+
+
+load_dotenv('secrets/secrets.env')
 
 def initialize_dotagent_client(llm, file_name, memory, **kwargs):
     template = _get_template(file_name)
-    client = compiler(template=template, llm=llm, memory=memory, **kwargs)
+    client = engine(template=template, llm=llm, memory=memory, **kwargs)
     return client
 
 

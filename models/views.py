@@ -4,7 +4,7 @@ from discord import Embed, TextChannel, Thread
 from discord.ui import Select
 from agents import DnDUtilityAgent, DnDAgent
 from models.custom_bot import DiscordBot
-from dotagent.memory import SummaryMemory
+from nextpy.ai.memory import SummaryMemory
 import re
 from typing import List
 

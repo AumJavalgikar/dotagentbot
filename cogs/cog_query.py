@@ -5,7 +5,7 @@ from discord.commands import (  # Importing the decorator that makes slash comma
     slash_command,
 )
 from models.custom_bot import DiscordBot
-from dotagent.compiler import Program
+from nextpy.ai.engine import Program
 from discord.ext import commands
 
 
