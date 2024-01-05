@@ -9,7 +9,7 @@ from nextpy.ai.engine import Program
 from discord.ext import commands
 
 
-class cog_query(commands.Cog):
+class cog_nextpy(commands.Cog):
     def __init__(self, bot):
         self.bot: DiscordBot = bot
 
@@ -22,4 +22,4 @@ class cog_query(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(cog_query(client))
+    client.add_cog(cog_nextpy(client))
