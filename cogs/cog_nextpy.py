@@ -18,7 +18,7 @@ class cog_nextpy(commands.Cog):
     async def query(self, ctx: ApplicationContext, query: str):
         await ctx.defer()
         response: Program = await self.bot.nextpy_client.run(user_text=query)
-        await ctx.respond(response)
+        await ctx.respond(response[:2000])
 
 
 def setup(client):
