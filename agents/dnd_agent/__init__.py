@@ -78,12 +78,12 @@ class DnDAgent(BaseAgent):
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
             output = await self.engine(dungeon_master_info=self.system_prompt,
-                                         player_name=self.player_name,
-                                         player_class=self.player_class,
-                                         player_race=self.player_race,
-                                         player_attributes=self.player_attributes,
-                                         current_area=f'Area name: {self.current_area}\n'
-                                                      f'Area description {self.current_area}',
+                                         player_name=self.player_name[0],
+                                         player_class=self.player_class[0],
+                                         player_race=self.player_race[0],
+                                         player_attributes=self.player_attributes[0],
+                                         current_area=f'Area name: {self.current_area[0]}\n'
+                                                      f'Area description {self.current_area[0]}',
                                          dnd_agent=id(self),
                                          tool=self.tools,
                                          tool_func=tool_use,
@@ -115,7 +115,7 @@ class DnDAgent(BaseAgent):
         if len(self._memory_related_tasks) > 0:
             for task in self._memory_related_tasks[:]:
                 if not task.done():
-                    print('\n\nFound a memory related task that is not yet done, awaiting it now..\n\n')
+                    # print('\n\nFound a memory related task that is not yet done, awaiting it now..\n\n')
                     await task
                 self._memory_related_tasks.remove(task)
 
@@ -131,7 +131,7 @@ class DnDAgent(BaseAgent):
             else:
                 raise ValueError("knowledge_variable not found in input kwargs")
         else:
-            print('Calling compiler..')
+            # print('Calling compiler..')
             output = await self.engine(dungeon_master_info=self.system_prompt,
                                          player_name=self.player_name,
                                          player_class=self.player_class,
@@ -143,13 +143,14 @@ class DnDAgent(BaseAgent):
                                          tool=self.tools,
                                          tool_func=tool_use,
                                          **kwargs, silent=True, from_agent=True)
-            print('Finished compiler call..')
+            print(output)
+            # print('Finished compiler call..')
             # Add new memory to ConversationHistory
             # print(f'self.compiler.memory : {self.compiler.memory}')
             # if self.compiler.memory is not None:
                 # print('Found memory, calling self._handle_memory()')
                 # self._handle_memory(output)
-
+            print('')
         if self.return_complete:
             return output
 
@@ -166,13 +167,13 @@ class DnDAgent(BaseAgent):
             return output
 
     def _handle_memory(self, new_program):
-        print('In handle memory')
+        # print('In handle memory')
         if self.engine.async_mode:
-            print('Async mode is true')
+            # print('Async mode is true')
             loop = asyncio.get_event_loop()
             assert loop.is_running(), "The program is in async mode but there is no asyncio event loop running! Start one and try again."
             scheduled_task = loop.create_task(self._update_memory(new_program))
-            print('Scheduled update memory')
+            # print('Scheduled update memory')
             self._memory_related_tasks.append(scheduled_task)
         else:
             try:
@@ -185,7 +186,7 @@ class DnDAgent(BaseAgent):
             loop.run_until_complete(self._update_memory(new_program))
 
     async def _update_memory(self, new_program):
-        print('\nIn update memory..\n')
+        # print('\nIn update memory..\n')
         all_text = extract_text(new_program.text)
         if asyncio.iscoroutine(self.engine.memory.add_memory):
             for text_block in all_text:
@@ -194,15 +195,15 @@ class DnDAgent(BaseAgent):
         else:
             for text_block in all_text:
                 for value in text_block:
-                    print(f'adding user : {value} llm_response: {text_block[value]} to memory')
+                    # print(f'adding user : {value} llm_response: {text_block[value]} to memory')
                     self.engine.memory.add_memory(prompt=value, llm_response=text_block[value])
-        print(f'Current memory prompts : {self.engine.memory.memory_prompts}')
+        # print(f'Current memory prompts : {self.engine.memory.memory_prompts}')
 
         if asyncio.iscoroutine(self.engine.memory.get_memory):
             self.engine.ConversationHistory = await self.engine.memory.get_memory()
         else:
             self.engine.ConversationHistory = self.engine.memory.get_memory()
-        print(f'\nUpdated memory successfully!\nCurrent ConvHistory: {self.engine.ConversationHistory}\n\n')
+        # print(f'\nUpdated memory successfully!\nCurrent ConvHistory: {self.engine.ConversationHistory}\n\n')
 
 
 def tool_use(var: dict):
