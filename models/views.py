@@ -324,6 +324,7 @@ class DnDUtilityView(View):
             self.accept_button.disabled = True
             self.new_button.disabled = True
         print(f'NEW DESCRIPTION : {new_description}')
+        self.description = new_description
         self.construct_embed_for_description(new_description, title, colour)
 
     def construct_embed_for_description(self, new_description, title, colour=discord.Colour.green()):
