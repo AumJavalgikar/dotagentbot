@@ -143,7 +143,7 @@ class DnDAgent(BaseAgent):
                                          tool=self.tools,
                                          tool_func=tool_use,
                                          **kwargs, silent=True, from_agent=True)
-            print(output)
+            print(output.__str__()[:300])
             # print('Finished compiler call..')
             # Add new memory to ConversationHistory
             # print(f'self.compiler.memory : {self.compiler.memory}')
