@@ -11,12 +11,16 @@ import os
 import requests
 
 def initialize_nextpy_agent(functions_before_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None, 
-                            functions_after_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None) -> NextpyAgent:
+                            functions_after_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None,
+                            async_mode=False) -> NextpyAgent:
     RAG_api_base = os.getenv('AZURE_ENDPOINT')
     RAG_deployment_id = os.getenv('DEPLOYMENT_ID')
     RAG_api_version = '2023-08-01-preview'
     RAG_llm_requestssession = setup_byod(RAG_api_base, RAG_deployment_id, RAG_api_version)
-    nextpy_client = NextpyAgent(requestsession=RAG_llm_requestssession, functions_after_call=functions_after_call, functions_before_call=functions_before_call)
+    nextpy_client = NextpyAgent(requestsession=RAG_llm_requestssession, 
+                                functions_after_call=functions_after_call, 
+                                functions_before_call=functions_before_call,
+                                async_mode=async_mode)
     return nextpy_client
 
 def setup_byod(RAG_api_base, RAG_deployment_id, RAG_api_version):
