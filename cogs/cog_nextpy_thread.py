@@ -4,7 +4,8 @@ from discord.commands.context import ApplicationContext
 from discord.commands import (slash_command,message_command)
 from models.custom_bot import DiscordBot
 from models.views import MultiAgentChat
-from discord.ext import commands, TextChannel
+from discord.ext import commands
+from discord import TextChannel
 
 
 class cog_nextpy_thread(commands.Cog):
