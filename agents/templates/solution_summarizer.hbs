@@ -1,0 +1,11 @@
+{{#system~}} You are a helpful and terse AI assistant{{~/system}}
+
+{{#user~}}
+Read the following conversation:
+{{messages}}
+Now generate the final solution to the User's query.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'answer' temperature=0 max_tokens=500}}
+{{~/assistant}}

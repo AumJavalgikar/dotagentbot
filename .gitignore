@@ -7,3 +7,4 @@ etc
 include
 .idea
 secrets
+*.pyc

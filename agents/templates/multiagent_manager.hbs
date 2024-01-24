@@ -1,0 +1,11 @@
+{{#system~}} You are playing a role playing game with the following participants : {{agents}}{{~/system}}
+
+{{#user~}}
+Read the following conversation and choose who the next speaker will be:
+{{messages}}
+Simply respond with the NAME of the next speaker. Do not include any numbers. Note, User is not a participant, you cannot choose User.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'answer' temperature=0 max_tokens=500}}
+{{~/assistant}}

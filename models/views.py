@@ -2,12 +2,11 @@ import discord
 from discord.ui import Button, View, Select
 from discord import Embed, TextChannel, Thread
 from discord.ui import Select
-from agents import DnDUtilityAgent, DnDAgent
-from models.custom_bot import DiscordBot
+from agents import DnDUtilityAgent, DnDAgent, AssistantAgent, MultiAgentManager
+from models.custom_bot import DiscordBot, initialize_nextpy_agent
 from nextpy.ai.memory import SummaryMemory
 import re
 from typing import List
-
 
 class DnDUtilityView(View):
     def __init__(self, description, bot):
@@ -454,3 +453,46 @@ class CharacterAttributes:
         self.intelligence = group.get('Intelligence')
         self.wisdom = group.get('Wisdom')
         self.charisma = group.get('Charisma')
+
+
+class MultiAgentChat(View):
+    def __init__(self, 
+                 bot: DiscordBot, 
+                 thread: Thread, 
+                 *args, 
+                 **kwargs):
+        self.embed = self.construct_embed()
+        self.thread: Thread = thread
+        
+        python_agent_prompt = '''
+        Nextpy is a new web framework, you do not have access to it's documentation yet. What you like to do when you are asked a question,
+        is you simply say "I'm going to wait until some documentation is provided in this conversation", then once you have more documentation provided in the CONVERSATION, you give your input.
+        '''
+        
+        self.python_client = AssistantAgent(name='Python developer', 
+                                            system_message=python_agent_prompt, 
+                                            llm=self.bot.llm, 
+                                            memory=None, 
+                                            async_mode=False,
+                                            functions_before_call=[self.python_agent_processing, [], []],
+                                            functions_after_call=[self.python_agent_finished, [], []])
+        
+        self.nextpy_client = initialize_nextpy_agent(functions_before_call=[self.nextpy_client_processing, [], []], functions_after_call=[self.nextpy_client_finished, [], []])
+        
+        self.multiagent_manager = MultiAgentManager(agents=[bot.nextpy_client, self.python_client], llm=bot.llm, rounds=2)
+        super().__init__(timeout=None)
+
+    async def run_chat(self, query):
+        return self.multiagent_manager.run_sequence(context=query)
+    
+    async def python_agent_processing(self):
+        await self.thread.send('Python Agent Processing 🔃')
+    
+    async def python_agent_finished(self):
+        await self.thread.send('Python Agent Finished ✅')
+    
+    async def nexpty_client_processing(self):
+        await self.thread.send('Nextpy Agent Processing 🔃')
+    
+    async def nextpy_client_finished(self):
+        await self.thread.send('Nextpy Agent Finished ✅')
