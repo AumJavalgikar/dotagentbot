@@ -461,7 +461,7 @@ class MultiAgentChat(View):
                  thread: Thread, 
                  *args, 
                  **kwargs):
-        self.embed = self.construct_embed()
+        
         self.thread: Thread = thread
         
         python_agent_prompt = '''
