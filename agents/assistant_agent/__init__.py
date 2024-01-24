@@ -72,7 +72,7 @@ class AssistantAgent(BaseAgent):
                      memory=None,
                      async_mode: bool=False,
                      system_message: str=None,
-                     engine=None,
+                     custom_engine=None,
                      functions_before_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None,
                      functions_after_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None,
                      **kwargs):
@@ -110,7 +110,7 @@ class AssistantAgent(BaseAgent):
             #Either llm or engine must be provided
             assert llm is not None or engine is not None, "Either llm or engine must be provided."
             
-            self.engine = engine if engine is not None else engine(template=self.prompt, llm=llm, memory=memory, async_mode=async_mode, **kwargs)
+            self.engine = custom_engine if custom_engine is not None else engine(template=self.prompt, llm=llm, memory=memory, async_mode=async_mode, **kwargs)
             self.output_key = 'answer'
             self.name = name
             self.functions_before_call = functions_before_call
