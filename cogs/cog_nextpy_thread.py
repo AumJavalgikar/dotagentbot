@@ -22,7 +22,7 @@ class cog_nextpy_thread(commands.Cog):
         view = MultiAgentChat(bot=self.bot, thread=thread)
         await thread.send("Thanks for using NextPy! We will be with you shortly.")
         # await ctx.respond('', view=view)
-        result = view.run_chat(query=query)    
+        result = await view.run_chat(query=query)    
         await thread.send(result[-1][1].replace('TERMINATE SUCCESSFULLY', ''))
 
 def setup(client):
