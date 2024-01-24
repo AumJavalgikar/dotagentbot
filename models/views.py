@@ -483,7 +483,7 @@ class MultiAgentChat(View):
         super().__init__(timeout=None)
 
     async def run_chat(self, query):
-        return self.multiagent_manager.run_sequence(context=query)
+        return await self.multiagent_manager.a_run_sequence(context=query)
     
     async def python_agent_processing(self):
         await self.thread.send('Python Agent Processing 🔃')
