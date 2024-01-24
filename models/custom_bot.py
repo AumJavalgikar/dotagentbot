@@ -50,7 +50,7 @@ def setup_byod(RAG_api_base, RAG_deployment_id, RAG_api_version):
 
 class DiscordBot(commands.Bot):
     def __init__(self, openai_key, *args, **kwargs):
-        self.nextpy_client = initialize_nextpy_agent()
+        self.nextpy_client = initialize_nextpy_agent(async_mode=True)
 
         self.llm = engine.llms.OpenAI(
             model="gpt-3.5-turbo",
