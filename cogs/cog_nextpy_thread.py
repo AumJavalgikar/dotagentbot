@@ -17,7 +17,7 @@ class cog_nextpy_thread(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)  # This command can only be used once every 3 seconds
     async def query(self, ctx: ApplicationContext, query: str):
         channel: TextChannel = ctx.channel
-        thread = await channel.create_thread(name=self.title, type=discord.ChannelType.public_thread)
+        thread = await channel.create_thread(name='Nextpy help', type=discord.ChannelType.public_thread)
         await thread.add_user(ctx.user)
         view = MultiAgentChat(bot=self.bot, thread=thread)
         await thread.send("Thanks for using NextPy! We will be with you shortly.")
