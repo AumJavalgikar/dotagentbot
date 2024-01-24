@@ -474,10 +474,10 @@ class MultiAgentChat(View):
                                             llm=bot.llm, 
                                             memory=None, 
                                             async_mode=False,
-                                            functions_before_call=[[self.python_agent_processing, [], []]],
-                                            functions_after_call=[[self.python_agent_finished, [], []]])
+                                            functions_before_call=[[self.python_agent_processing, [], {}]],
+                                            functions_after_call=[[self.python_agent_finished, [], {}]])
         
-        self.nextpy_client = initialize_nextpy_agent(functions_before_call=[[self.nextpy_client_processing, [], []]], functions_after_call=[[self.nextpy_client_finished, [], []]])
+        self.nextpy_client = initialize_nextpy_agent(functions_before_call=[[self.nextpy_client_processing, [], {}]], functions_after_call=[[self.nextpy_client_finished, [], {}]])
         
         self.multiagent_manager = MultiAgentManager(agents=[bot.nextpy_client, self.python_client], llm=bot.llm, rounds=2)
         super().__init__(timeout=None)
