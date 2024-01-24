@@ -473,7 +473,7 @@ class MultiAgentChat(View):
                                             system_message=python_agent_prompt, 
                                             llm=bot.llm, 
                                             memory=None, 
-                                            async_mode=False,
+                                            async_mode=True,
                                             functions_before_call=[[self.python_agent_processing, [], {}]],
                                             functions_after_call=[[self.python_agent_finished, [], {}]])
         

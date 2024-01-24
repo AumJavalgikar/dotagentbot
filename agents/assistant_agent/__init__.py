@@ -99,7 +99,9 @@ class AssistantAgent(BaseAgent):
             """
             super().__init__(llm=llm, **kwargs)
             self.prompt = self.DEFAULT_PROMPT
-
+            
+            self.async_mode = async_mode # This is used by multiagent manager to determine whether to use receive or a_receive
+            
             if system_message is not None:
                 try:
                     system_message = Path(system_message).read_text()

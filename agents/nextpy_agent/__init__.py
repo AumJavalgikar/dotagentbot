@@ -13,6 +13,7 @@ class NextpyAgent(AssistantAgent):
         self.name = 'Retrival Augmented Nextpy Agent'
         self.functions_before_call=functions_before_call = functions_before_call
         self.functions_after_call=functions_after_call = functions_after_call
+        self.async_mode = False
         # Not calling super.init() here as we don't need an engine for this agent.
 
     async def arun(self, **kwargs) -> Union[str, Dict[str, Any]]:

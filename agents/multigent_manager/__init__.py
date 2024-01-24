@@ -57,6 +57,23 @@ class MultiAgentManager:
 
             self.rounds -= 1
         return self.messages
+    
+    async def a_run_sequence(self, context):
+        self.messages.append(['User', context])
+        while self.rounds > 0 and not self._termination_message_received():
+
+            print(
+                f'{"-"*5}Messaging next agent : {self.agents[self.current_agent].name}{"-"*5}\n\n')
+
+            await self._a_message_next_agent()
+
+            print(f'{self.messages[-1][0]}\n\n{self.messages[-1][1]}')
+
+            if self.current_agent == 0 and not self.round_robin:
+                break
+
+            self.rounds -= 1
+        return self.messages
 
     def run_auto(self, context):
         self.messages.append(['User', context])
@@ -74,17 +91,31 @@ class MultiAgentManager:
         print(final_solution)
         return [self.messages, final_solution]
 
-    def _message_next_agent(self, next_agent=None):
+    async def _a_message_next_agent(self, next_agent=None):
         if next_agent is None:
-            received_message = self.agents[self.current_agent].receive(
-                self.agent_string, self._parse_messages(), self.termination_message)
-            self.messages.append(
-                [self.agents[self.current_agent].name, received_message])
+            next_agent = self.agents[self.current_agent]
             self.current_agent = (self.current_agent + 1) % len(self.agents)
+        
+        if next_agent.async_mode:
+            received_message = await next_agent.a_receive(
+                self.agent_string, self._parse_messages(), self.termination_message)
         else:
             received_message = next_agent.receive(
                 self.agent_string, self._parse_messages(), self.termination_message)
-            self.messages.append([next_agent.name, received_message])
+    
+        self.messages.append([next_agent.name, received_message])
+
+    def _message_next_agent(self, next_agent=None):
+        if next_agent is None:
+            next_agent = self.agents[self.current_agent]
+            self.current_agent = (self.current_agent + 1) % len(self.agents)
+              
+        assert not next_agent.async_mode, "Don't use run_sequence for async agents, use a_run_sequence instead"
+        
+        received_message = next_agent.receive(
+            self.agent_string, self._parse_messages(), self.termination_message)
+        
+        self.messages.append([next_agent.name, received_message])
 
     def _termination_message_received(self):
         return self.termination_message in self.messages[-1][1]
