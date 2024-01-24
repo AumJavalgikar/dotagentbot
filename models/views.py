@@ -491,7 +491,7 @@ class MultiAgentChat(View):
     async def python_agent_finished(self):
         await self.thread.send('Python Agent Finished ✅')
     
-    async def nexpty_client_processing(self):
+    async def nextpy_client_processing(self):
         await self.thread.send('Nextpy Agent Processing 🔃')
     
     async def nextpy_client_finished(self):
