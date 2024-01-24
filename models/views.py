@@ -471,7 +471,7 @@ class MultiAgentChat(View):
         
         self.python_client = AssistantAgent(name='Python developer', 
                                             system_message=python_agent_prompt, 
-                                            llm=self.bot.llm, 
+                                            llm=bot.llm, 
                                             memory=None, 
                                             async_mode=False,
                                             functions_before_call=[self.python_agent_processing, [], []],
