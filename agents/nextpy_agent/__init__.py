@@ -8,12 +8,12 @@ from agents.assistant_agent import AssistantAgent
 
 class NextpyAgent(AssistantAgent):
 
-    def __init__(self, requestsession, functions_before_call=None, functions_after_call=None):
+    def __init__(self, requestsession, functions_before_call=None, functions_after_call=None, async_mode=False):
         self.requestsession = requestsession
         self.name = 'Retrival Augmented Nextpy Agent'
-        self.functions_before_call=functions_before_call = functions_before_call
-        self.functions_after_call=functions_after_call = functions_after_call
-        self.async_mode = False
+        self.functions_before_call= functions_before_call
+        self.functions_after_call= functions_after_call
+        self.async_mode = async_mode
         # Not calling super.init() here as we don't need an engine for this agent.
 
     async def arun(self, **kwargs) -> Union[str, Dict[str, Any]]:
@@ -83,4 +83,9 @@ class NextpyAgent(AssistantAgent):
     @AssistantAgent.function_call_decorator
     def receive(self, agents, messages, termination_message):
         output = self.run(user_text=messages)
+        return output.get('choices')[0].get('message').get('content')
+    
+    @AssistantAgent.function_call_decorator
+    def a_receive(self, agents, messages, termination_message):
+        output = self.arun(user_text=messages)
         return output.get('choices')[0].get('message').get('content')

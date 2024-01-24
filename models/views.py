@@ -477,7 +477,9 @@ class MultiAgentChat(View):
                                             functions_before_call=[[self.python_agent_processing, [], {}]],
                                             functions_after_call=[[self.python_agent_finished, [], {}]])
         
-        self.nextpy_client = initialize_nextpy_agent(functions_before_call=[[self.nextpy_client_processing, [], {}]], functions_after_call=[[self.nextpy_client_finished, [], {}]])
+        self.nextpy_client = initialize_nextpy_agent(functions_before_call=[[self.nextpy_client_processing, [], {}]], 
+                                                     functions_after_call=[[self.nextpy_client_finished, [], {}]],
+                                                     async_mode=True)
         
         self.multiagent_manager = MultiAgentManager(agents=[bot.nextpy_client, self.python_client], llm=bot.llm, rounds=2)
         super().__init__(timeout=None)
@@ -486,13 +488,13 @@ class MultiAgentChat(View):
         return await self.multiagent_manager.a_run_sequence(context=query)
     
     async def python_agent_processing(self):
-        await self.thread.send('Python Agent Processing 🔃')
+        await self.thread.send('`Python Agent Processing 🔃`')
     
     async def python_agent_finished(self):
-        await self.thread.send('Python Agent Finished ✅')
+        await self.thread.send('`Python Agent Finished ✅`')
     
     async def nextpy_client_processing(self):
-        await self.thread.send('Nextpy Agent Processing 🔃')
+        await self.thread.send('`Nextpy Agent Processing 🔃`')
     
     async def nextpy_client_finished(self):
-        await self.thread.send('Nextpy Agent Finished ✅')
+        await self.thread.send('`Nextpy Agent Finished ✅`')
