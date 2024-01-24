@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 from agents.utils import initialize_dotagent_client
 from nextpy.ai import engine
-from typing import Callable, List
+from typing import Callable, Tuple
 import inspect
 import asyncio
 
@@ -73,8 +73,8 @@ class AssistantAgent(BaseAgent):
                      async_mode: bool=False,
                      system_message: str=None,
                      engine=None,
-                     functions_before_call: List[Callable, List[Any], List[Any]]=None,
-                     functions_after_call: List[Callable, List[Any], List[Any]]=None,
+                     functions_before_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None,
+                     functions_after_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None,
                      **kwargs):
             """
             Initializes an instance of the AssistantAgent class.

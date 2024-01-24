@@ -6,12 +6,12 @@ from nextpy.ai import engine
 from nextpy.ai.memory import SummaryMemory
 from pathlib import Path
 from agents import QueryAgent, IntervieweeAgent, InterviewerAgent, DnDAgent, NextpyAgent
-from typing import Dict,List,Callable, Any
+from typing import Dict, Tuple, Callable, Any
 import os
 import requests
 
-def initialize_nextpy_agent(functions_before_call: List[Callable, List[Any], List[Any]]=None, 
-                            functions_after_call: List[Callable, List[Any], List[Any]]=None) -> NextpyAgent:
+def initialize_nextpy_agent(functions_before_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None, 
+                            functions_after_call: Tuple[Callable, Tuple[Any], Tuple[Any]]=None) -> NextpyAgent:
     RAG_api_base = os.getenv('AZURE_ENDPOINT')
     RAG_deployment_id = os.getenv('DEPLOYMENT_ID')
     RAG_api_version = '2023-08-01-preview'
