@@ -10,7 +10,7 @@ class NextpyAgent(AssistantAgent):
 
     def __init__(self, requestsession, functions_before_call=None, functions_after_call=None, async_mode=False):
         self.requestsession = requestsession
-        self.name = 'Retrival Augmented Nextpy Agent'
+        self.name = 'Retrieval Augmented Nextpy Agent'
         self.functions_before_call= functions_before_call
         self.functions_after_call= functions_after_call
         self.async_mode = async_mode
