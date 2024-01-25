@@ -19,7 +19,6 @@ class cog_nextpy(commands.Cog):
     async def query(self, ctx: ApplicationContext, query: str):
         await ctx.defer()
         response: Program = await self.bot.nextpy_client.arun(user_text=query)
-        await ctx.respond(response.get('choices')[0].get('message').get('content'))
         await self.send_response(ctx, response.get('choices')[0].get('message').get('content'))
         
     async def send_response(self, ctx, response):
