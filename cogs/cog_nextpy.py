@@ -23,12 +23,12 @@ class cog_nextpy(commands.Cog):
         
     async def send_response(self, ctx, response):
         if len(response) < 2000:
-            await ctx.send(response)
+            await ctx.respond(response)
         else:
             while len(response) >= 2000:
                 await ctx.send(response[:2000])
                 response = response[2000:]
-            await ctx.send(response)
+            await ctx.respond(response)
 
 
 def setup(client):
