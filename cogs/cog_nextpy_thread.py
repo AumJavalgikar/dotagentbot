@@ -16,6 +16,7 @@ class cog_nextpy_thread(commands.Cog):
     @slash_command(name='nextpythread', description='Starts a context based thread to solve nextpy issues')
     @commands.cooldown(1, 3, commands.BucketType.user)  # This command can only be used once every 3 seconds
     async def nextpythread(self, ctx: ApplicationContext, query: str):
+        await ctx.respond('Creating a thread for you to solve your issue. Please wait a moment.', ephemeral=True)
         channel: TextChannel = ctx.channel
         thread = await channel.create_thread(name='Nextpy help', type=discord.ChannelType.public_thread)
         await thread.add_user(ctx.user)
