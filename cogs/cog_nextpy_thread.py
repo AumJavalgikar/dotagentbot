@@ -29,7 +29,7 @@ class cog_nextpy_thread(commands.Cog):
         if len(response) < 2000:
             await thread.send(embed=discord.Embed(description=response))
         else:
-            while len(thread) >= 2000:
+            while len(response) >= 2000:
                 await thread.send(embed=discord.Embed(description=response[:2000]))
                 response = response[2000:]
             await thread.send(embed=discord.Embed(description=response))
