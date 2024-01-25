@@ -25,7 +25,7 @@ class cog_nextpy_thread(commands.Cog):
         result = await view.run_chat(query=query)
         await self.send_response(thread, result[-1][1].replace('TERMINATE SUCCESSFULLY', ''))
     
-    async def send_response(thread, response):
+    async def send_response(self, thread, response):
         if len(response) < 2000:
             await thread.send(embed=discord.Embed(description=response))
         else:

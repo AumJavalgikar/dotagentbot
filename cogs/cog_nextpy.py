@@ -22,7 +22,7 @@ class cog_nextpy(commands.Cog):
         await ctx.respond(response.get('choices')[0].get('message').get('content'))
         await self.send_response(ctx, response.get('choices')[0].get('message').get('content'))
         
-    async def send_response(ctx, response):
+    async def send_response(self, ctx, response):
         if len(response) < 2000:
             await ctx.send(response)
         else:
