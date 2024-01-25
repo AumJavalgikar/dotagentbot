@@ -86,6 +86,6 @@ class NextpyAgent(AssistantAgent):
         return output.get('choices')[0].get('message').get('content')
     
     @AssistantAgent.function_call_decorator
-    def a_receive(self, agents, messages, termination_message):
+    async def a_receive(self, agents, messages, termination_message):
         output = self.arun(user_text=messages)
         return output.get('choices')[0].get('message').get('content')
