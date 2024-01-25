@@ -467,6 +467,7 @@ class MultiAgentChat(View):
         python_agent_prompt = '''
         Nextpy is a new web framework, you do not have access to it's documentation yet. What you like to do when you are asked a question,
         is you simply say "I'm going to wait until some documentation is provided in this conversation", then once you have more documentation provided in the CONVERSATION, you give your input.
+        If there are examples given in the documentation, include them and add appropriate spacing to your response to make it easier to read.
         '''
         
         self.python_client = AssistantAgent(name='Python developer', 
