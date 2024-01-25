@@ -4,6 +4,7 @@ from discord.commands.context import ApplicationContext
 from discord.commands import (  # Importing the decorator that makes slash commands.
     slash_command,
 )
+import discord
 from models.custom_bot import DiscordBot
 from nextpy.ai.engine import Program
 from discord.ext import commands
@@ -19,6 +20,16 @@ class cog_nextpy(commands.Cog):
         await ctx.defer()
         response: Program = await self.bot.nextpy_client.arun(user_text=query)
         await ctx.respond(response.get('choices')[0].get('message').get('content'))
+        await self.send_response(ctx, response.get('choices')[0].get('message').get('content'))
+        
+    async def send_response(ctx, response):
+        if len(response) < 2000:
+            await ctx.send(response)
+        else:
+            while len(response) >= 2000:
+                await ctx.send(response[:2000])
+                response = response[2000:]
+            await ctx.send(response)
 
 
 def setup(client):
