@@ -31,7 +31,7 @@ class NextpyAgent(AssistantAgent):
         openai.api_version = "2023-08-01-preview"
         openai.requestssession = self.requestsession
 
-        completion = openai.ChatCompletion.create(
+        completion = await openai.ChatCompletion.acreate(
             messages=message_text,
             deployment_id=deployment_id,
             dataSources=[  # camelCase is intentional, as this is the format the API expects
@@ -87,5 +87,5 @@ class NextpyAgent(AssistantAgent):
     
     @AssistantAgent.function_call_decorator
     async def a_receive(self, agents, messages, termination_message):
-        output = self.arun(user_text=messages)
+        output = await self.arun(user_text=messages)
         return output.get('choices')[0].get('message').get('content')
