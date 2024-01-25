@@ -481,20 +481,43 @@ class MultiAgentChat(View):
                                                      functions_after_call=[[self.nextpy_client_finished, [], {}]],
                                                      async_mode=True)
         
-        self.multiagent_manager = MultiAgentManager(agents=[bot.nextpy_client, self.python_client], llm=bot.llm, rounds=2)
+        self.multiagent_manager = MultiAgentManager(agents=[self.nextpy_client, self.python_client], llm=bot.llm, rounds=2)
+        self.embed = self.construct_embed()
+        self.chat_update_message = None
         super().__init__(timeout=None)
 
     async def run_chat(self, query):
-        return await self.multiagent_manager.a_run_sequence(context=query)
+        self.embed = self.construct_embed() # Reset the embed
+        self.chat_update_message = await self.thread.send(embed=self.embed) # Send the embed
+        return await self.multiagent_manager.a_run_sequence(context=query) # Run the multiagent manager
     
     async def python_agent_processing(self):
+        self.add_to_embed_description('Python Agent Processing 🔃')
+        await self.chat_update_message.edit(embed=self.embed)
+        return
         await self.thread.send('`Python Agent Processing 🔃`')
     
     async def python_agent_finished(self):
+        self.add_to_embed_description('Python Agent Finished ✅')
+        await self.chat_update_message.edit(embed=self.embed)
+        return
         await self.thread.send('`Python Agent Finished ✅`')
     
     async def nextpy_client_processing(self):
-        await self.thread.send('`Nextpy Agent Processing 🔃`')
+        self.add_to_embed_description('Nextpy RAG Agent Processing 🔃')
+        await self.chat_update_message.edit(embed=self.embed)
+        return
+        await self.thread.send('`Nextpy RAG Agent Processing 🔃`')
     
     async def nextpy_client_finished(self):
-        await self.thread.send('`Nextpy Agent Finished ✅`')
+        self.add_to_embed_description('Nextpy RAG Agent Finished ✅')
+        await self.chat_update_message.edit(embed=self.embed)
+        return
+        await self.thread.send('`Nextpy RAG Agent Finished ✅`')
+    
+    def construct_embed():
+        return discord.Embed(title='MultiAgent chat for Nextpy help', colour=discord.Colour.green(), description='The chat has begun..')
+
+    def add_to_embed_description(self, new_description):
+        self.embed.description += f'\n\n{new_description}'
+        return self.embed
