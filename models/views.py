@@ -515,7 +515,7 @@ class MultiAgentChat(View):
         return
         await self.thread.send('`Nextpy RAG Agent Finished ✅`')
     
-    def construct_embed():
+    def construct_embed(self):
         return discord.Embed(title='MultiAgent chat for Nextpy help', colour=discord.Colour.green(), description='The chat has begun..')
 
     def add_to_embed_description(self, new_description):
